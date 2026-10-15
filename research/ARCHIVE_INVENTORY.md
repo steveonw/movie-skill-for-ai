@@ -2,7 +2,7 @@
 
 This documents the **four original multi-AI planning response files** supplied during the originating ChatGPT conversation. The first repository snapshot preserved only a synthesis. User explicitly requested **lossless preservation, not just a summary**.
 
-**IMPORTANT: The four original source files are NOT yet in this GitHub repository.** The assistant produced a downloadable lossless ZIP in the originating conversation, named `movie_skill_research_originals_2026-10-14.zip` (223,551 bytes). The user should download and retain it, then upload or commit its four Markdown contents to `research/originals/` in this GitHub repository. The ZIP includes `MANIFEST.json` with SHA-256 checksums; see exact checksums below. The sandbox download link may not persist forever, unlike a GitHub commit. Do not claim the raw originals are committed until you verify them by fetching from GitHub.
+**IMPORTANT: The four original source files are NOT yet in this GitHub repository.** The assistant produced a downloadable lossless ZIP in the originating conversation, named `movie_skill_research_originals_2026-10-14.zip` (223,618 bytes). The user should download and retain it, then upload or commit its four Markdown contents to `research/originals/` in this GitHub repository. The ZIP includes `MANIFEST.json` with SHA-256 checksums; see exact checksums below. The sandbox download link may not persist forever, unlike a GitHub commit. Do not claim the raw originals are committed until you verify them by fetching from GitHub.
 
 | Original filename | Size in bytes | SHA-256 |
 |---|---:|---|
