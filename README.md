@@ -8,7 +8,7 @@
 
 **Human:** Read this page, check [ROADMAP.md](ROADMAP.md), then open [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) to see the next engineering goal.
 
-**AI joining the project:** Read [AI_HANDOFF.md](AI_HANDOFF.md) for purpose, history, current reality and next step. Read [AGENTS.md](AGENTS.md) for implementation rules. Check the actual main branch, open issues and pull requests **before** writing code. The [workshop procedure](WORKSHOP.md) is a coordination aid and must never prevent useful work if unavailable.
+**AI joining the project:** Read [AI_HANDOFF.md](AI_HANDOFF.md) for purpose, history, current reality and next step. Read [AGENTS.md](AGENTS.md) for implementation rules. Check the actual main branch, open issues and pull requests **before** writing code. **Before work, read the [shared AI noticeboard — Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2)** for status, other AIs' discoveries and interface questions. During work, keep detailed tests in your own issue/PR; post a short, useful cross-team summary on #2 when opening a substantive PR, reaching a milestone, or discovering a dependency. The [workshop procedure](WORKSHOP.md) is coordination, not a blocker.
 
 **One-sentence mission:** *Story → AI direction → spoken timing → reusable visual assets → MP4 that genuinely matches what the narrator says.*
 
@@ -38,7 +38,7 @@ We are developing **three separate, independently useful ChatGPT Skills**, with 
 
 - **Research and durable handoffs:** committed on `main`, including all four original AI planning files under [research/originals/](research/originals/).
 - **Earlier video reference:** [MTH263_Calculus_Exam_Review_Narrated.mp4](MTH263_Calculus_Exam_Review_Narrated.mp4), provided by the user; this is **not** a Movie Builder Skill deliverable.
-- **First tiny Movie Builder code prototype:** **merged into `main`** via [PR #3](https://github.com/steveonw/movie-skill-for-ai/pull/3). It made a simple five-image/seven-second synthetic-audio test MP4 in the originating session. The `movie_builder/` folder contains a renderer and a demo generator. This is *not* a finished Skill and not yet merged to `main`.
+- **First tiny Movie Builder code prototype:** **merged into `main`** via [PR #3](https://github.com/steveonw/movie-skill-for-ai/pull/3). It made a simple five-image/seven-second synthetic-audio test MP4 in the originating session. The `movie_builder/` folder contains a renderer and a demo generator. This is *not* a finished Skill. Follow-up improvements are in [draft PR #7](https://github.com/steveonw/movie-skill-for-ai/pull/7).
 - **First development task:** [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) stays open. It needs stronger duration/reveal checks, contact-sheet automation, a reproducible test and real narration.
 
 Do not tell people that the three Skills or the full filmmaking pipeline have already been built.
@@ -54,6 +54,10 @@ Do not tell people that the three Skills or the full filmmaking pipeline have al
 | Learn how to contribute or coordinate with another AI | [AGENTS.md](AGENTS.md), [WORKSHOP.md](WORKSHOP.md) |
 | Revisit full raw multi-AI research | [research/originals/](research/originals/), [HISTORY_AND_PROMPTS.md](HISTORY_AND_PROMPTS.md) |
 | See human-readable conversation history | [CONVERSATION_SUMMARY.md](CONVERSATION_SUMMARY.md) |
+
+## Shared AI communication
+
+**[Issue #2 — AI Workshop Noticeboard](https://github.com/steveonw/movie-skill-for-ai/issues/2)** is the first place a new agent should **read for other workers' progress** and the place to **post a short status/finding or concrete cross-Skill question**. Detailed evidence belongs in the worker's own [issue](https://github.com/steveonw/movie-skill-for-ai/issues) or PR; link it from #2 so other AIs and the master AI can find it. A post is expected at meaningful milestones, **not** for every clock-in or line of code. Decisions on shared contracts are proposed on #2 and settled by the owner/master AI, then recorded in the architecture docs.
 
 ## How we work
 
