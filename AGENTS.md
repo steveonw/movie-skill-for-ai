@@ -2,9 +2,19 @@
 
 This repository is the durable working home of a low-cost, AI-directed story-to-video toolkit made from **three standalone but interoperable ChatGPT Skills**: Story Director, Narration Studio, and Movie Builder.
 
-## AI collaboration and session ownership
+## First understand the mission
 
-Follow [WORKSHOP.md](WORKSHOP.md) for clock-in, issue-based message board comments, progress findings, takeover, and clock-out handoffs. A GitHub status entry does not mean an AI continues working after its chat/session ends. Do not mark tasks claimed before actually beginning the associated work.
+**We are building three standalone ChatGPT Skills that together turn stories into low-cost narrated illustrated movies.** The workshop is not the product; the movie-making experience is the product.
+
+1. **Story Director:** interpret a story, direct visuals, plan comedic timing and shots without rewriting the author's text.
+2. **Narration Studio:** generate/align narration, preserve pronunciation mappings, compute real clip and selective word timings.
+3. **Movie Builder:** assemble supplied/generated visual assets with narration into a playable MP4, with accurate reveals and QA.
+
+The three Skills must work separately as well as in a pipeline. See [README.md](README.md) for the human-readable goal and [AI_HANDOFF.md](AI_HANDOFF.md) for the detailed handoff.
+
+### Collaboration is a helper, not a blocker
+
+[WORKSHOP.md](WORKSHOP.md) explains optional clock-in/out comments, issue discussion, and handoffs. **Never refuse or delay a substantive filmmaking request merely because a clock-in form, message board, or GitHub Issues comment is unavailable.** If repository writing is possible, leave a concise record. If it is not, do the task as far as possible and provide the handoff in your response. There are no continuously running agents behind those status labels.
 
 ## On every new session
 
