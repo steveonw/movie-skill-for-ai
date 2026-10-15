@@ -241,7 +241,9 @@ class TestMovieBuilderIntegration(TempDir):
         # frame (ARCHITECTURE invariant 4). Cumulative frame boundaries, not
         # per-shot rounding, so error cannot accumulate.
         cuts = [0] + [-(-s["speech_start_sample"] * fps // rate) for s in side["segments"][1:]]
-        end_frame = -(-total * fps // rate)
+        # Last whole frame inside the audio (the tail is silence), so the video
+        # never outlasts the audio; renderers using -shortest then keep every frame.
+        end_frame = total * fps // rate
         shots = []
         for i, a in enumerate(cuts):
             b = cuts[i + 1] if i + 1 < len(cuts) else end_frame
@@ -258,7 +260,13 @@ class TestMovieBuilderIntegration(TempDir):
         self.assertEqual(qa["expected_frames"], end_frame)
         self.assertEqual([s["frames"] for s in qa["shots"]],
                          [b - a for a, b in zip(cuts, cuts[1:] + [end_frame])])
-        self.assertAlmostEqual(float(qa["format"]["duration"]), total / rate, delta=2 / fps)
+        # Measure the MP4 directly so the test doesn't depend on the QA report layout.
+        probe = json.loads(subprocess.run(
+            ["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0",
+             "-show_entries", "stream=nb_read_frames:format=duration", "-of", "json", str(out)],
+            check=True, capture_output=True, text=True).stdout)
+        self.assertEqual(int(probe["streams"][0]["nb_read_frames"]), end_frame)
+        self.assertAlmostEqual(float(probe["format"]["duration"]), total / rate, delta=2 / fps)
 
 
 if __name__ == "__main__":
