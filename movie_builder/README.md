@@ -31,3 +31,12 @@ Additional local verification (2026-10-14, revised renderer): five PNGs plus sev
 - Audio/shot duration discrepancy greater than one video frame is rejected before rendering. Very small container padding and timestamp nuances still require additional real-media tests.
 - Source-image contact sheet is automatic; it does not verify actual encoded cut times. No captions, transitions, precision word anchor, cache, or full technical test suite yet.
 - No need for other Skills; no paid services.
+
+
+## ChatGPT Skill 3 (draft package, 2026-10-14)
+
+The Movie Builder Skill now has `movie_builder/SKILL.md`, `agents/openai.yaml`, and bundled `scripts/` for standalone installation. The bundle supports input shots and supplied narration rather than depending on Story Director or Narration Studio. To package independently, use the ChatGPT skill packaging validator on `movie_builder/`; its included scripts require Python, Pillow, FFmpeg and ffprobe on the execution host.
+
+`verify_cuts.py` inspects **decoded output frames immediately before and at** each planned cut, comparing to input stills. Test with `python -m unittest discover -s movie_builder/tests -v`. Encoded-frame detection is not the same as speech/word timing verification and can become ambiguous when adjacent source stills are visually similar.
+
+Independent local verification (2026-10-14): a three-shot 10-fps fixture produced a real encoded H.264 video and the cut verification test passed, including deliberate wrong-plan rejection. A separate packaged-skill demo with synthetic 7-second WAV and five placeholders rendered 210/210 frames, H.264/AAC, 7.0s and passed all 8 boundary-frame checks. The packaged example's scripts are maintained as copies of the repository prototype and will need synchronization as source code evolves. No full narrated-story acceptance demo was run.
