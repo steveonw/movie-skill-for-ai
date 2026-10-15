@@ -1,4 +1,6 @@
-# Multi-Agent Workshop — Selective GitHub Collaboration
+# Workshop — Optional Multi-Agent Experiment
+
+> **Current mode (owner preference, 2026-10-15): ONE AI developer.** Work on the filmmaking product without needing a classroom cast, human relay, clock-ins, or ceremonial transmissions. Existing issues and PRs remain useful for organizing the three distinct Skills. Use Issue #2 for significant shared decisions or handoffs, not mandatory attendance. The four-seat workflow below is preserved as an **optional experimental protocol** if the owner later reactivates multiple AI sessions. GitHub comments are **passive**: they do not broadcast automatically to separate AI chats and cannot substitute for an OpenRouter-style coordinator.
 
 **Objective:** Build three independently useful filmmaking Skills—Story Director, Narration Studio, and Movie Builder—and integrate them into a reliable story-to-MP4 workflow. **Working movies and tested code matter more than managing agents.**
 
