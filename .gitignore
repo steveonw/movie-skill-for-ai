@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+# generated narration/video output and downloaded voices (keep private audio out of this public repo)
+out/
+vits-*/
+kokoro-*/
+*.tar.bz2
