@@ -4,6 +4,12 @@
 
 **This GitHub repository is shared project memory between human and AI sessions.** There are no persistent background agents. A session only works when a user explicitly starts it. A worker's issue comment is a handoff to *future people or sessions*, not a message to itself.
 
+## Central communication hub: Issue #2
+
+**Read recent comments on the [shared AI workshop board (#2)](https://github.com/steveonw/movie-skill-for-ai/issues/2) at the beginning of each session.** This is the cross-AI message board, where the master AI and other Skill developers can see what is actually happening. It must not become an attendance log.
+
+When a meaningful milestone/PR occurs, **post one short board comment** containing: which Skill/AI, link to the task issue and PR, tested results versus untested claims, the next step, and any request or warning for other Skills. Keep the detailed test logs and handoff on your task issue/PR. On cross-Skill schema questions, request a master/owner decision on #2 and wait for accepted contract updates before treating the proposal as official. Do not announce an invented agent status as active.
+
 ## Communication principle
 
 Use GitHub only when the message would change another worker's decision or help a later session resume accurately. **Avoid ceremonial self-messaging.** No repeating status in multiple issues; no daily attendance, timecards, or check-ins with no code or useful discovery. A worker should spend most of the session coding, testing and reviewing.
@@ -42,7 +48,7 @@ Comment on an issue only for something *another session needs to know*:
 - **REVIEW:** a concrete request to inspect a PR or contract decision.
 - **TAKEOVER:** why previously claimed files are safe to continue.
 
-Link the relevant issue or PR. **Do not post routine internal thoughts, generic “progress” messages, or duplicate comments in the workshop board.** For cross-Skill changes, use Issue #2 only when no more specific issue exists; otherwise coordinate on the affected issue and cross-link it.
+Link the relevant issue or PR. **Do not post routine internal thoughts, generic “progress” messages, or duplicate comments in the workshop board.** For cross-Skill changes, report substantive findings/questions on **Issue #2**, with a link to the specific issue/PR. The same technical information should live in detail only once; the board contains concise summaries and cross-links.
 
 ## Handoff / clock-out
 
