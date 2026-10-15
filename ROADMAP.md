@@ -1,4 +1,6 @@
-# Build and Test Roadmap — no implementation completed
+# Build and Test Roadmap
+
+Updated 2026-10-14: Movie Builder prototype merged (PR #3); Narration Studio M1 on branch `work/narration-studio-m1` (#5).
 
 ## Phase 0 — Preserve and checkpoint
 - [x] Curate memory, interoperability concept, decision log and AI handoff on GitHub.
@@ -14,14 +16,15 @@
 - [ ] Keep Movie Builder standalone: no Story Director, no Narration Studio required.
 
 ## Phase 2 — Narration Studio standalone timing
-- [ ] Accept supplied WAV clips and assemble with sample-exact inserted pauses.
-- [ ] Produce a master WAV and segment/silence timing JSON sidecar; compare sample counts.
-- [ ] Implement a disk clip cache keyed on voice/model/synthesis settings and spoken text.
-- [ ] Test change-one-line → only that line resynthesizes.
-- [ ] Add one local TTS adapter (verify voice/model licensing) and multi-speaker rendering.
+- [x] Accept supplied WAV clips and assemble with sample-exact inserted pauses. *(narration_studio M1, tested)*
+- [x] Produce a master WAV and segment/silence timing JSON sidecar; compare sample counts. *(narration_studio M1, tested)*
+- [x] Implement a disk clip cache keyed on voice/model/synthesis settings and spoken text. *(narration_studio M1, tested)*
+- [x] Test change-one-line → only that line resynthesizes. *(narration_studio M1, tested)*
+- [x] Add one local TTS adapter and multi-speaker rendering *(sherpa-onnx VITS/Piper; per-speaker sid/speed/model; tested)*
+- [ ] Verify licence of each shipped voice before any commercial use (Amy MODEL_CARD points to mimic3-voices; not yet reviewed).
 - [ ] Align an external MP3 to a script; detect mismatches and confidence issues.
 - [ ] Resolve a word-internal “fourteen” or “Bang” reveal with verified timestamps/selective alignment.
-- [ ] Optionally import Read-Aloud-Main WAV and label-track metadata.
+- [x] Optionally import Read-Aloud-Main WAV and label-track metadata. *(narration_studio M1, tested)*
 
 ## Phase 3 — Story Director standalone and structured planning
 - [ ] Storyboard, beat sheet, reusable character sheet and image prompt-pack, with no other Skill installed.

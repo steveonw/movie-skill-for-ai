@@ -10,6 +10,10 @@ The optional [AI Workshop Protocol](WORKSHOP.md) exists to help AI sessions coor
 
 **Repo/PR state at this documentation update:** `main` contains durable research, the user-provided calculus sample MP4, and project docs. A first 5-image/7s synthetic-audio Movie Builder technical prototype was merged into `main` via PR #3 (squash commit `3d290561055ed95a5dcddfa1d9f7159601e637f9`). It is not a finished Skill. Issue #1 tracks the remaining checks. **Continue to verify live repository state before making progress claims.**
 
+## Update 2026-10-14 (late) — Narration Studio M1 built (Claude session, issue #5)
+
+`narration_studio/` on branch `work/narration-studio-m1` (PR linked on #5): `SKILL.md`, `scripts/narrate.py` with modes **build** (story/Markdown/`script.json` → local sherpa-onnx Piper voice, cached), **assemble** (supplied clips + pauses), **import-readaloud** (Read-Aloud-Main WAV/MP3 + label track) and **verify**. Writes `narration.wav`, `narration.json` (first implemented `filmkit/narration@1.0`, provisional; see `narration_studio/references/narration-schema.md`), SRT and Audacity labels. 15 tests pass, including a real Amy-voice build and a Movie Builder render driven by the sidecar. Measured facts worth knowing: VITS output differs on every call (so the clip cache, not re-synthesis, keeps timing stable), and the Amy voice pads clips with 30–60 ms before and ~50–200 ms after speech, so the sidecar carries both clip bounds and measured `speech_start/end_sample`. **Not done:** aligning an independently recorded MP3, word-level timing. Next: Story Director M1 (#4) or word timing for in-line reveals.
+
 ## Why this exists
 
 The conversation that led to this design was large. The user created `https://github.com/steveonw/movie-skill-for-ai` as a **durable project memory** so a future assistant can continue without depending on previous chat context. Preserve and update this handoff as decisions or implementations change. Do not assert a feature is functional until tested.
@@ -34,7 +38,7 @@ Adapt ideas to Narration Studio: persistent disk cache, stable IDs separate from
 2. **Narration Studio:** Text→speech, speaker casting, clip caching, deliberate pauses, pronunciation map; or user MP3 + script→alignment; export `narration.wav`, `narration.json`, optional SRT/Audacity labels. Audio segment boundaries measured by integer samples. Word timing only when necessary, with confidence/provenance. Audiobook use standalone.
 3. **Movie Builder:** User images+audio→video standalone (simple heuristic when no director plan), or with `script.json`, `plan.json`, `narration.json`→resolved timeline, visual assets, FFmpeg MP4, contact sheet and technical QA. Generate text cards in code. Image APIs optional and cost-bounded.
 
-Skill instructions are entrypoint `SKILL.md` with precise trigger descriptions and optional bundled scripts/references/assets; eventual packages should be independently installable and tested. The current repository holds planning notes only.
+Skill instructions are entrypoint `SKILL.md` with precise trigger descriptions and optional bundled scripts/references/assets; eventual packages should be independently installable and tested. Implemented so far: Movie Builder technical prototype (`movie_builder/`) and Narration Studio M1 (`narration_studio/`); neither is packaged yet.
 
 ## Agreed or high-confidence design principles
 

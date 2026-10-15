@@ -59,4 +59,4 @@ The three Skills must work separately as well as in a pipeline. See [README.md](
 **Original sources:** [research/originals/](research/originals/)  
 **Build list:** [ROADMAP.md](ROADMAP.md) and GitHub Issues
 
-**Status as of 2026-10-14:** Design and archival documentation only; do not claim the Skills or production engine are implemented until verification.
+**Status as of 2026-10-14:** Movie Builder has a merged technical prototype (`movie_builder/`, PR #3). Narration Studio M1 is implemented and tested on branch `work/narration-studio-m1` (issue #5). Story Director is not started. None is a packaged Skill yet; verify current state before claiming more.
