@@ -4,11 +4,17 @@
 
 **This is a filmmaking project, not an agent attendance or time-clock project.** The optional [AI Workshop](WORKSHOP.md) exists only to help different AI sessions share work and avoid duplicated changes.
 
+## Current development mode: one AI, three independent Skills
+
+**Owner preference (2026-10-15): use one AI/development conversation for now.** That AI may work through Story Director, Narration Studio and Movie Builder sequentially, while keeping each Skill separately usable. Multiple models or a master AI are **not required**. No clock-ins, role assignments, `TRANSMIT:` posts or coordinating aides are necessary for normal single-AI work. Continue with GitHub issues, tests, reviewable PRs and a clear end-of-session handoff.
+
+The original four-AI classroom format is documented in [WORKSHOP.md](WORKSHOP.md) as an **optional future experiment**. GitHub Issue #2 is a persistent shared message archive, **not** a live relay: comments do not automatically reach independent AI chats or wake models. Moving to simultaneous agents later would require the human to relay messages or a separate authorized orchestration system.
+
 ## Start here (human or AI)
 
 **Human:** Read this page, check [ROADMAP.md](ROADMAP.md), then open [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) to see the next engineering goal.
 
-**AI joining the project:** Read [AI_HANDOFF.md](AI_HANDOFF.md) for purpose, history, current reality and next step. Read [AGENTS.md](AGENTS.md) for implementation rules. Check the actual main branch, open issues and pull requests **before** writing code. **Before work, read the [shared AI noticeboard — Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2)** for status, other AIs' discoveries and interface questions. During work, keep detailed tests in your own issue/PR; post a short, useful cross-team summary on #2 when opening a substantive PR, reaching a milestone, or discovering a dependency. The [workshop procedure](WORKSHOP.md) is coordination, not a blocker.
+**AI joining the project:** Read [AI_HANDOFF.md](AI_HANDOFF.md) for purpose, history, current reality and next step. Read [AGENTS.md](AGENTS.md) for implementation rules. Check the actual main branch, open issues and pull requests **before** writing code. **For a new session, check [Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2) for relevant historical decisions.** Keep detailed test evidence and handoffs in task issues/PRs; post to #2 when a cross-component decision or durable finding would help another session. The [workshop procedure](WORKSHOP.md) is coordination, not a blocker.
 
 **One-sentence mission:** *Story → AI direction → spoken timing → reusable visual assets → MP4 that genuinely matches what the narrator says.*
 
