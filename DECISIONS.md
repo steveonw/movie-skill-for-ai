@@ -32,6 +32,12 @@ Updated: 2026-10-14
 - Segments + silences must tile the master exactly; `verify` enforces it and checks inserted silence is literal zeros.
 - Measured: VITS synthesis is non-deterministic (same sentence → different length), so cached audio is the timing authority for generated narration.
 
+## Implemented in Narration Studio M2 (2026-10-14, issue #9), provisional until reviewed
+- Word timing = local sherpa-onnx transducer ASR (zipformer-small-en, Apache-2.0) + letter-level fuzzy alignment to the script's *spoken* words + onset refinement against the audio. Raw ASR word times are **early** (63–785 ms measured, worse after pauses), so they are never used directly for reveals; they are kept as `raw_asr_sample` for audit.
+- Each segment carries `words[]` (`id`, `text`, `spoken`), so anchors survive pronunciation swaps ("2026" spoken as "twenty twenty-six").
+- `align` keeps the user's recording bit-exact as the master; segment bounds come from aligned words; changed, missing and unscripted lines become warnings, never silent fixes.
+- Gaps taken from real audio (imports, recordings) keep their original samples. Only tool-inserted silence is zeros.
+
 ## Rejected for v1
 - A fourth coordinating Skill.
 - A general-purpose timeline GUI or editing database.

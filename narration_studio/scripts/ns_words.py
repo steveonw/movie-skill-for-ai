@@ -11,9 +11,10 @@ Pipeline for one stretch of audio whose script words are known:
      among the energy dips near the expected onset, pick the one closest to
      raw time + measured bias, always preferring a real pause.
 
-Validation (2026-10-14, 60 known-onset cases, 30 held out): mean error
--2.6 ms, worst -15 ms, no case more than one 30 fps frame early. Measured on
-synthetic Piper/VITS speech only; real human recordings are untested.
+Validation (2026-10-14, 60 known word onsets after pauses of 0, 0.25 and
+0.75 s): mean error -1.2 ms, 56 within 10 ms, none more than one 30 fps frame
+early, one 97 ms late (soft "z" onset). Raw recognizer times were 63-785 ms
+early. Synthetic Piper/VITS speech only; real human recordings are untested.
 """
 import contextlib
 import os
@@ -31,8 +32,9 @@ REFINE_LOOK = 0.35          # ...and this far after it
 REFINE_WINDOW = 0.005       # 5 ms energy windows
 PAUSE_FLOOR = 0.01          # dip below 1% of peak energy = a real pause
 METHOD = "asr_timestamps+energy_onset_refinement"
-VALIDATION = {"cases": 60, "held_out": 30, "mean_error_ms": -2.6, "worst_error_ms": -15,
-              "more_than_one_30fps_frame_early": 0,
+VALIDATION = {"cases": 60, "pauses_before_word_s": [0.0, 0.25, 0.75], "mean_error_ms": -1.2,
+              "within_10ms": 56, "worst_early_ms": -32, "worst_late_ms": 97,
+              "more_than_one_30fps_frame_early": 0, "more_than_one_30fps_frame_late": 1,
               "conditions": "synthetic Piper/VITS speech (Amy voice), zipformer-small-en; human speech untested"}
 
 # --------------------------------------------------------------------------- numbers -> words

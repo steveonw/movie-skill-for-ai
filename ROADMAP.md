@@ -22,8 +22,8 @@ Updated 2026-10-14: Movie Builder prototype merged (PR #3); Narration Studio M1 
 - [x] Test change-one-line → only that line resynthesizes. *(narration_studio M1, tested)*
 - [x] Add one local TTS adapter and multi-speaker rendering *(sherpa-onnx VITS/Piper; per-speaker sid/speed/model; tested)*
 - [ ] Verify licence of each shipped voice before any commercial use (Amy MODEL_CARD points to mimic3-voices; not yet reviewed).
-- [ ] Align an external MP3 to a script; detect mismatches and confidence issues.
-- [ ] Resolve a word-internal “fourteen” or “Bang” reveal with verified timestamps/selective alignment.
+- [x] Align an external MP3 to a script; detect mismatches and confidence issues. *(narration_studio M2 `align`, #9; validated on synthetic speech, human recordings untested)*
+- [x] Resolve a word-internal “fourteen” or “Bang” reveal with verified timestamps/selective alignment. *(M2 `words --find`; 60 known onsets: none more than 1 frame early)*
 - [x] Optionally import Read-Aloud-Main WAV and label-track metadata. *(narration_studio M1, tested)*
 
 ## Phase 3 — Story Director standalone and structured planning
