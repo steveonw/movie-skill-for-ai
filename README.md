@@ -38,7 +38,7 @@ We are developing **three separate, independently useful ChatGPT Skills**, with 
 
 - **Research and durable handoffs:** committed on `main`, including all four original AI planning files under [research/originals/](research/originals/).
 - **Earlier video reference:** [MTH263_Calculus_Exam_Review_Narrated.mp4](MTH263_Calculus_Exam_Review_Narrated.mp4), provided by the user; this is **not** a Movie Builder Skill deliverable.
-- **First tiny Movie Builder code prototype:** on the **unmerged** branch `work/movie-builder-m1`, in [draft PR #3](https://github.com/steveonw/movie-skill-for-ai/pull/3). It made a simple five-image/seven-second synthetic-audio test MP4 in the originating session. The branch contains a renderer and a demo generator. This is *not* a finished Skill and not yet merged to `main`.
+- **First tiny Movie Builder code prototype:** **merged into `main`** via [PR #3](https://github.com/steveonw/movie-skill-for-ai/pull/3). It made a simple five-image/seven-second synthetic-audio test MP4 in the originating session. The `movie_builder/` folder contains a renderer and a demo generator. This is *not* a finished Skill and not yet merged to `main`.
 - **First development task:** [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) stays open. It needs stronger duration/reveal checks, contact-sheet automation, a reproducible test and real narration.
 
 Do not tell people that the three Skills or the full filmmaking pipeline have already been built.
