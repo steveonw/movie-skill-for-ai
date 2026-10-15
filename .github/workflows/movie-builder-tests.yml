@@ -1,0 +1,30 @@
+name: Movie Builder tests
+
+on:
+  pull_request:
+    paths:
+      - "movie_builder/**"
+      - ".github/workflows/movie-builder-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "movie_builder/**"
+      - ".github/workflows/movie-builder-tests.yml"
+
+jobs:
+  renderer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install FFmpeg and imaging dependency
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade pip
+          python -m pip install Pillow
+      - name: Run standalone Movie Builder tests
+        run: python -m unittest discover -s movie_builder/tests -v
