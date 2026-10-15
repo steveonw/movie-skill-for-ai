@@ -1,0 +1,16 @@
+{
+  "cast": {
+    "narrator": {"sid": 0, "speed": 1.0},
+    "Marcus": {"sid": 0, "speed": 1.08},
+    "Dana": {"sid": 0, "speed": 0.92}
+  },
+  "pronunciations": {
+    "2026": "twenty twenty-six",
+    "Dr.": "Doctor"
+  },
+  "pauses": {
+    "sentence": 0.35,
+    "paragraph": 0.75,
+    "tail": 0.6
+  }
+}

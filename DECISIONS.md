@@ -24,6 +24,14 @@ Updated: 2026-10-14
 - One model-backed image provider adapter initially (if image-generation integration is tested); HF could be a provider but is not a free GPU guarantee.
 - Technical QA required; expensive vision-based semantic QA deferred.
 
+## Implemented in Narration Studio M1 (2026-10-14, issue #5) — provisional until reviewed
+- `narration.json` carries **both** exact clip bounds (`start/end_sample`) and measured audible speech (`speech_start/end_sample`, 10 ms energy threshold, provenance tagged). Cuts and captions should use speech bounds; splicing uses clip bounds.
+- Three text fields per segment: `source_text` (author's exact text), `display_text` (Markdown removed), `spoken_text` (after pronunciation map).
+- Clip cache key = engine + model checksum + voice (sid, speed) + synthesis settings + spoken text. Segment IDs are excluded, so renumbering or duplicate lines never force re-synthesis.
+- Plain-text input gets positional IDs (`s001`…); `script.json` IDs are preserved. Stable IDs across edits are Story Director's job.
+- Segments + silences must tile the master exactly; `verify` enforces it and checks inserted silence is literal zeros.
+- Measured: VITS synthesis is non-deterministic (same sentence → different length), so cached audio is the timing authority for generated narration.
+
 ## Rejected for v1
 - A fourth coordinating Skill.
 - A general-purpose timeline GUI or editing database.
