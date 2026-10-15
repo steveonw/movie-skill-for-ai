@@ -19,12 +19,35 @@ Use:
 - **Issue comments:** coordination across owners, tested findings, conflicts, and final handoffs.
 - **Pull requests:** the authoritative reviewable record of code changes, test results and remaining gaps.
 - **AGENTS.md / AI_HANDOFF.md / ROADMAP.md:** shared technical directions and durable current state, updated only for meaningful changes.
-- **WORKSHOP.md (this file):** shared working agreement. Don't keep an agent activity log here.
+- **WORKSHOP.md (this file):** shared working agreement, plus the **Current claims** table below (who is working on what *right now*). Don't keep an agent activity log here: rows are deleted when work ends, history lives in issues and PRs.
 - **research/originals/:** immutable source archives.
 
 ## Lightweight claiming and clock-in
 
-Before editing, inspect the relevant issue, active pull requests and recent comments, then pick a scope with minimal overlap. A short **CLOCK IN** comment is useful when multiple workers might touch the same files. It is **optional** for isolated work and never blocks useful work.
+### Current claims
+
+**This table is the clock-in.** It lists only work in progress *right now*, so two sessions never edit the same files by accident. It is not a log.
+
+| Worker / session | Issue | Branch | Files it owns | Claimed (UTC) |
+|---|---|---|---|---|
+| _none right now_ | | | | |
+
+**Open for claiming:** Story Director M1 (#4) · Narration word-level timing (follow-up to #5) · reviews of PR #7 / PR #8.
+Unmerged work to know about: Movie Builder QA on draft PR #7, Narration Studio on PR #8. Neither is on `main` yet.
+
+**Clock in (30 seconds):**
+1. Pull `main` and read this table and the latest posts on #2.
+2. If your files overlap an existing row, pick other files, coordinate on #2, or do a TAKEOVER (below). Don't share files silently.
+3. Add your row and push it straight to `main` with the commit message `claim: <worker> on #<issue>`. Editing this table is the one routine change allowed directly on `main`; touch nothing else in that commit.
+4. If the push is rejected because `main` moved, pull again, re-check the table, and retry.
+
+**Clock out:** delete your row (`release: <worker> on #<issue>`) in the same session you finish, and leave the handoff on your issue or PR (template below). If you open a PR or find something another Skill needs, also post one short line on #2.
+
+**Stale claims:** a row older than 12 hours whose branch has no new commits is presumed abandoned. Post a TAKEOVER on its issue saying what you checked, then replace the row. Never delete someone's branch or force-push to it.
+
+### Optional claim comment
+
+The table above is the claim. A **CLOCK IN** comment on the task issue is only worth posting when you need to explain scope to another worker (shared files, a takeover, a plan that changes an interface). It never blocks useful work.
 
 Suggested concise message:
 
@@ -40,7 +63,7 @@ A clock-in is a **courtesy claim, not a lock, attendance record, or proof of ong
 
 ## During implementation
 
-Make the smallest useful and testable change. Work on a dedicated branch and open a PR rather than changing `main` directly, **unless the user specifically requests a direct documentation/policy edit on main**. Avoid edits outside the task's owner directory. Preserve all user-owned artifacts, licensing requirements and sensitive data rules from AGENTS.md.
+Make the smallest useful and testable change. Work on a dedicated branch and open a PR rather than changing `main` directly, **except for your own row in the Current claims table, or when the user specifically requests a direct documentation/policy edit on main**. Avoid edits outside the task's owner directory. Preserve all user-owned artifacts, licensing requirements and sensitive data rules from AGENTS.md.
 
 Comment on an issue only for something *another session needs to know*:
 - **FINDING:** measured outcome with test evidence or a cross-Skill interface constraint.
