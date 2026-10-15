@@ -18,11 +18,12 @@ The three Skills must work separately as well as in a pipeline. See [README.md](
 
 ## On every new session
 
-1. Read `AI_HANDOFF.md`, `CONVERSATION_SUMMARY.md`, `DECISIONS.md`, and `ROADMAP.md`.
-2. Check what actually exists in the repository before claiming something is built or tested.
-3. For contested design choices consult `research/originals/` (four independent multi-AI planning documents) and `HISTORY_AND_PROMPTS.md`. Original files are historical evidence, **not** specifications to implement uncritically.
-4. Check current open GitHub Issues. Work toward a runnable acceptance test, rather than producing additional abstract handoffs.
-5. After substantial work, update `AI_HANDOFF.md`, `DECISIONS.md` if decisions change, `ROADMAP.md` milestones and tests. State exactly what ran and what did not.
+1. Read the **Current work board** at the top of [WORKSHOP.md](WORKSHOP.md) first: it says who is working on what, which branch/PR holds unmerged work, and what is unclaimed. Update your row on `main` when you clock in and out.
+2. Read `AI_HANDOFF.md`, `CONVERSATION_SUMMARY.md`, `DECISIONS.md`, and `ROADMAP.md`.
+3. Check what actually exists in the repository before claiming something is built or tested.
+4. For contested design choices consult `research/originals/` (four independent multi-AI planning documents) and `HISTORY_AND_PROMPTS.md`. Original files are historical evidence, **not** specifications to implement uncritically.
+5. Check current open GitHub Issues. Work toward a runnable acceptance test, rather than producing additional abstract handoffs.
+6. After substantial work, update `AI_HANDOFF.md`, `DECISIONS.md` if decisions change, `ROADMAP.md` milestones and tests. State exactly what ran and what did not.
 
 ## Non-negotiable product aims
 
