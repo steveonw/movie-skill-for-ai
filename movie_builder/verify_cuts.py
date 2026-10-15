@@ -8,6 +8,11 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageOps, ImageStat
 
+try:
+    from .renderer import plan_frames
+except ImportError:  # running directly from packaged scripts/
+    from renderer import plan_frames
+
 
 def decoded_frame(video, index):
     cmd = ["ffmpeg", "-v", "error", "-i", str(video), "-vf",
@@ -35,9 +40,7 @@ def verify(spec_path, video_path, tolerance=35, min_separation=8):
     shots = spec.get("shots", [])
     if len(shots) < 2:
         raise ValueError("Need >=2 shots for a cut verification")
-    frame_counts = [round(float(s["duration"]) * fps) for s in shots]
-    if any(n <= 0 for n in frame_counts):
-        raise ValueError("Shot must last at least one frame")
+    frame_counts = plan_frames(shots, fps)
     sources = [(spec_path.parent / s["image"]).resolve() for s in shots]
     boundary = 0
     checks = []
