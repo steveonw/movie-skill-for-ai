@@ -2,6 +2,10 @@
 
 This repository is the durable working home of a low-cost, AI-directed story-to-video toolkit made from **three standalone but interoperable ChatGPT Skills**: Story Director, Narration Studio, and Movie Builder.
 
+## Active operating mode (2026-10-15)
+
+**One AI works on the project for now, at the owner's request.** Develop and test the three Skills one at a time without assuming any other AI is currently assigned. Keep their implementation boundaries intact. Read live code, PRs and test evidence; report progress by GitHub PR/task issue. [WORKSHOP.md](WORKSHOP.md) documents an optional, presently inactive multi-agent classroom experiment; its four seats, `TRANSMIT:` and `BROADCAST:` format are **not mandatory** in single-AI mode. [Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2) remains a durable shared-decisions archive. GitHub does not deliver comments to other AI model conversations automatically.
+
 ## First understand the mission
 
 **We are building three standalone ChatGPT Skills that together turn stories into low-cost narrated illustrated movies.** The workshop is not the product; the movie-making experience is the product.
