@@ -22,48 +22,61 @@ Use:
 - **WORKSHOP.md (this file):** shared working agreement, plus the **Current claims** table below (who is working on what *right now*). Don't keep an agent activity log here: rows are deleted when work ends, history lives in issues and PRs.
 - **research/originals/:** immutable source archives.
 
-## Lightweight claiming and clock-in
+## Clock in: a shared, live file-ownership table on `main`
 
 ### Current claims
 
-**This table is the clock-in.** It lists only work in progress *right now*, so two sessions never edit the same files by accident. It is not a log.
+**The table below is the clock-in.** Add a row **only when beginning a concrete editing session** and remove it at handoff. The point is to stop agents from editing the same files without knowing about each other, not to track attendance or pretend agents are running in the background.
 
-| Worker / session | Issue | Branch | Files it owns | Claimed (UTC) |
-|---|---|---|---|---|
-| _none right now_ | | | | |
+| Worker / session | Issue and deliverable | Branch / PR | Files being edited | Next action / help needed | Claimed (UTC) |
+| --- | --- | --- | --- | --- | --- |
+| _none currently claimed_ | | | | | |
 
-**Open for claiming:** Story Director M1 (#4) · Narration word-level timing (follow-up to #5) · reviews of PR #7 / PR #8.
-Unmerged work to know about: Movie Builder QA on draft PR #7, Narration Studio on PR #8. Neither is on `main` yet.
+**Find work and outstanding requests:** [open issues](https://github.com/steveonw/movie-skill-for-ai/issues?q=is%3Aissue+is%3Aopen) · [open PRs](https://github.com/steveonw/movie-skill-for-ai/pulls?q=is%3Apr+is%3Aopen) · [cross-agent messages (#2)](https://github.com/steveonw/movie-skill-for-ai/issues/2). Do **not** maintain a manually copied list of "available" issues or PR statuses here; that becomes stale.
 
-**Clock in (30 seconds):**
-1. Pull `main` and read this table and the latest posts on #2.
-2. If your files overlap an existing row, pick other files, coordinate on #2, or do a TAKEOVER (below). Don't share files silently.
-3. Add your row and push it straight to `main` with the commit message `claim: <worker> on #<issue>`. Editing this table is the one routine change allowed directly on `main`; touch nothing else in that commit.
-4. If the push is rejected because `main` moved, pull again, re-check the table, and retry.
+### Start work (30-second coordination)
 
-**Clock out:** delete your row (`release: <worker> on #<issue>`) in the same session you finish, and leave the handoff on your issue or PR (template below). If you open a PR or find something another Skill needs, also post one short line on #2.
+1. **Read first:** fetch the current `main` version of this table, recent #2 posts, the task issue, and existing branches/PRs. An earlier agent's claimed branch may have unmerged changes that must be reviewed before continuing.
+2. **Choose a small scope:** identify one issue, a concrete deliverable, a unique session label, your working branch, and **specific file paths**. A role like "Movie Builder" alone is too broad to serve as a useful claim.
+3. **CLOCK IN:** insert one row in the table on `main`. Example row:
+   `| GPT-6 / 2026-10-14-mb-cuts | #1: prove encoded reveal frames | work/movie-builder-cuts / PR TBD | movie_builder/verify_cuts.py, movie_builder/tests/ | Run cut tests; ask Narration about onset anchors | 2026-10-15 03:30 UTC |`
+   This is an **example only**, not an active claim. Use the actual current UTC time and actual worker/session label.
+4. **Commit only the table edit** to `main` as `claim: <worker/session> #<issue>`. Do not mix code or unrelated documentation with this short claim commit. If a competing edit changed `WORKSHOP.md`, fetch the newest version, re-check for overlapping files, and retry using the latest blob SHA; do not force-push or replace someone else's row.
+5. **Code on your own branch**, not on `main`. A claim is a courtesy reservation of a **file-edit scope**, not ownership of an entire Skill or a lock. If any listed file overlaps another claim or unmerged PR, coordinate or narrow your scope **before** editing it.
 
-**Stale claims:** a row older than 12 hours whose branch has no new commits is presumed abandoned. Post a TAKEOVER on its issue saying what you checked, then replace the row. Never delete someone's branch or force-push to it.
+For user-requested small edits **to this coordination document itself**, do not create a row just to change and remove that row. Make the requested main-branch edit and report the commit.
 
-### Optional claim comment
+If GitHub write access is unavailable, don't block the work: leave an issue/PR comment if possible and explicitly state the overlap uncertainty in your handoff.
 
-The table above is the claim. A **CLOCK IN** comment on the task issue is only worth posting when you need to explain scope to another worker (shared files, a takeover, a plan that changes an interface). It never blocks useful work.
+### Stale claims and collision handling
 
-Suggested concise message:
+A clock-in does **not** mean that an agent is still running. GitHub cannot tell whether a chat session remains active. A claim older than ~12 hours **merits inspection**, but is **not automatically abandoned**. Check the last issue/PR comments and branch commits, then either coordinate with the worker or post a brief **TAKEOVER** on the task issue explaining which files and evidence you checked. Never delete the other worker's branch, force-push their work or silently overwrite their claim. Update the table to reflect the new owner only after that review.
+
+If two sessions reach for the same files, one should take a separate test/review task or create a separate branch and PR. **File claims are advisory; branch and PR history are authoritative.**
+
+## How agents actually communicate
+
+**Issue #2 is for messages meant for another worker or the project integrator.** A message is useful only if the recipient can understand the requested decision or action. Routine clock-ins belong **only in the table**; detailed logs belong **only on the task issue/PR**.
+
+When one Skill needs another, post **one** targeted request on #2:
 
 ```markdown
-### CLOCK IN — [worker/session]
-- Working on: #issue, [specific deliverable] on [branch]
-- Own files: [paths]
-- Verification: [concrete test]
-- Coordination needed: [none / question / overlapping PR]
+### REQUEST / DECISION NEEDED — [source Skill -> destination Skill or owner]
+- From: [worker/session, issue, PR]
+- To: [Story Director / Narration Studio / Movie Builder / owner or integrator]
+- Need: [one concrete answer, review or artifact]
+- Why it matters: [downstream test blocked or risk of conflict]
+- Proposed default: [specific proposal, explicitly not yet approved]
+- Reply location: [issue or PR link]
 ```
 
-A clock-in is a **courtesy claim, not a lock, attendance record, or proof of ongoing work**. If a past claim has no recent evidence of work, examine its PR/commits and coordinate or record a scoped takeover; don't assume an agent remains active. Never overwrite another worker's unmerged branch without explicit consent or a released handoff.
+The recipient, **when invoked in a later active session**, should read #2, respond on the linked issue/PR, and leave one short link back on #2 if the answer affects other Skills. A #2 comment **does not start an agent**, deliver a notification, or authorize an interface change by itself. A proposed shared schema becomes authoritative only when the owner/designated integrator approves it and the appropriate contract docs/tests are updated.
+
+Other substantive board messages can start with `FINDING`, `REVIEW REQUEST`, or `BLOCKED`, always with a recipient, a link, and a requested next action. Don't post a second "status" comment merely to repeat your PR description.
 
 ## During implementation
 
-Make the smallest useful and testable change. Work on a dedicated branch and open a PR rather than changing `main` directly, **except for your own row in the Current claims table, or when the user specifically requests a direct documentation/policy edit on main**. Avoid edits outside the task's owner directory. Preserve all user-owned artifacts, licensing requirements and sensitive data rules from AGENTS.md.
+Make the smallest useful and testable change. Work on a dedicated branch and open a PR rather than changing `main` directly, **except for updating the Current claims table or user-requested policy/documentation changes on main**. Avoid edits outside the task's owner directory. Preserve all user-owned artifacts, licensing requirements and sensitive data rules from AGENTS.md.
 
 Comment on an issue only for something *another session needs to know*:
 - **FINDING:** measured outcome with test evidence or a cross-Skill interface constraint.
@@ -98,4 +111,4 @@ Avoid claiming success merely because tests were written: say which tests *actua
 
 If documents disagree with tested code, fix the documentation; don't make vague success claims.
 
-**Definition of done:** a useful deliverable exists, acceptance checks were executed and reported (or limitations candidly disclosed), reviewable change history is available, and future work is unambiguously handed off. The goal remains good movies and independently useful Skills—not management theater.
+**Definition of done:** a useful deliverable exists, acceptance checks were executed and reported (or limitations candidly disclosed), reviewable change history is available, and future work is unambiguously handed off. **CLOCK OUT:** remove your row from the live claims table, then leave one evidence-based handoff on your task issue/PR. If another workstream needs to act, leave one targeted linked notice on #2. The goal remains good movies and independently useful Skills—not management theater.
