@@ -14,17 +14,17 @@ The three Skills must work separately as well as in a pipeline. See [README.md](
 
 ### Collaboration is a helper, not a blocker
 
-[WORKSHOP.md](WORKSHOP.md) explains optional clock-in/out comments, issue discussion, and handoffs. **Never refuse or delay a substantive filmmaking request merely because a clock-in form, message board, or GitHub Issues comment is unavailable.** If repository writing is possible, leave a concise record. If it is not, do the task as far as possible and provide the handoff in your response. There are no continuously running agents behind those status labels.
+[WORKSHOP.md](WORKSHOP.md) maintains the **live current-claims table on `main`** for editing scopes and uses [Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2) for directed questions and decisions between Skills. Detailed handoffs belong on task issues or PRs, not in repeated messages to yourself. **Never refuse or delay a substantive filmmaking request merely because a clock-in form, message board, or GitHub Issues comment is unavailable.** If repository writing is possible, leave a concise record. If it is not, do the task as far as possible and provide the handoff in your response. There are no continuously running agents behind those status labels.
 
 ## On every new session
 
-0. **Check the Current claims table in [WORKSHOP.md](WORKSHOP.md)** and add your row before editing files (delete it when you finish). It shows who is working on what right now and which files are taken.
+0. **Check the Current claims table in [WORKSHOP.md](WORKSHOP.md)**, open PRs and recent #2 requests before substantive code edits. Claim only the actual files you will edit, with an issue, branch and deliverable; remove your row at handoff. A user-requested documentation-only tweak to `WORKSHOP.md` itself does not require a ceremonial claim.
 1. **Read recent posts on the [shared workshop noticeboard, GitHub Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2)** to learn what the other AI workstreams discovered. Check the linked issues, PRs and commits; comments are not proof that an AI is still running.
 2. Read `AI_HANDOFF.md`, `CONVERSATION_SUMMARY.md`, `DECISIONS.md`, and `ROADMAP.md`.
 3. Check what actually exists in the repository before claiming something is built or tested.
 4. For contested design choices consult `research/originals/` (four independent multi-AI planning documents) and `HISTORY_AND_PROMPTS.md`. Original files are historical evidence, **not** specifications to implement uncritically.
 5. Check current open GitHub Issues. Work toward a runnable acceptance test, rather than producing additional abstract handoffs.
-6. When opening a substantive PR, reaching a test milestone, uncovering a cross-Skill dependency, or becoming blocked by another component, **post one concise linked STATUS/FINDING/QUESTION on Issue #2**. Detailed local test logs and session handoffs stay on your task issue or PR. Shared interface changes need master/owner acceptance, then an update to `ARCHITECTURE.md` / `DECISIONS.md`. Do not spam the board with routine clock-ins.
+6. For substantive milestones or cross-Skill blockers, use **Issue #2 as an addressable coordination board**: name the recipient Skill/owner, link the task issue/PR, state the decision or review needed and where to reply. Post facts and requests other workers can act on; do not narrate your own progress or repeat test logs there. Contract changes require owner/designated integrator acceptance, then tested updates to `ARCHITECTURE.md` / `DECISIONS.md`. Clock-ins are rows in `WORKSHOP.md`, not #2 comments.
 7. After substantial work, update `AI_HANDOFF.md`, `DECISIONS.md` if decisions change, `ROADMAP.md` milestones and tests. State exactly what ran and what did not.
 
 ## Non-negotiable product aims
