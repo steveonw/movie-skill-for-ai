@@ -135,8 +135,9 @@ def assemble(events, rate, channels=1):
     events: list of dicts, each either
       {"type": "clip", "samples": int16 array, ...}  or
       {"type": "silence", "frames": int, ...}
-    Every event receives integer start_sample/end_sample. Silences are
-    literal zero samples. Returns (master int16 (frames, channels), events).
+    Every event receives integer start_sample/end_sample. Inserted silences
+    are literal zero samples; a silence event may instead carry "samples"
+    (a gap taken from a real recording), which are copied unchanged. Returns (master int16 (frames, channels), events).
     """
     total = 0
     for ev in events:
@@ -152,10 +153,15 @@ def assemble(events, rate, channels=1):
             length = int(ev["frames"])
             if length < 0:
                 raise ValueError("negative silence")
+            if ev.get("samples") is not None:  # a gap that keeps its original audio
+                s = np.asarray(ev["samples"], dtype=np.int16).reshape(-1, channels)
+                if s.shape[0] != length:
+                    raise ValueError("gap samples do not match its length")
+                ev["samples"] = s
         ev["start_sample"], ev["end_sample"] = total, total + length
         total += length
     master = np.zeros((total, channels), dtype=np.int16)
     for ev in events:
-        if ev["type"] == "clip":
+        if ev.get("samples") is not None:
             master[ev["start_sample"]:ev["end_sample"]] = ev["samples"]
     return master, events

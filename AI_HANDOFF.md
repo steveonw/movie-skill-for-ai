@@ -14,6 +14,10 @@ The optional [AI Workshop Protocol](WORKSHOP.md) exists to help AI sessions coor
 
 `narration_studio/` on branch `work/narration-studio-m1` (PR linked on #5): `SKILL.md`, `scripts/narrate.py` with modes **build** (story/Markdown/`script.json` → local sherpa-onnx Piper voice, cached), **assemble** (supplied clips + pauses), **import-readaloud** (Read-Aloud-Main WAV/MP3 + label track) and **verify**. Writes `narration.wav`, `narration.json` (first implemented `filmkit/narration@1.0`, provisional; see `narration_studio/references/narration-schema.md`), SRT and Audacity labels. 15 tests pass, including a real Amy-voice build and a Movie Builder render driven by the sidecar. Measured facts worth knowing: VITS output differs on every call (so the clip cache, not re-synthesis, keeps timing stable), and the Amy voice pads clips with 30–60 ms before and ~50–200 ms after speech, so the sidecar carries both clip bounds and measured `speech_start/end_sample`. **Not done:** aligning an independently recorded MP3, word-level timing. Next: Story Director M1 (#4) or word timing for in-line reveals.
 
+## Update 2026-10-14 (later) — Narration Studio M2: word timing + outside recordings (Claude session, issue #9)
+
+Branch `work/narration-studio-m2`, stacked on PR #8. New commands: `narrate.py words OUT --asr-model DIR [--find bang,fourteen]` adds `word_times` to an existing narration, and `narrate.py align RECORDING STORY --asr-model DIR --out OUT` times a narration recorded outside the tool. Key measured fact: raw speech-recognizer word times run 63–785 ms early, so each start is refined against the audio. On 60 known onsets, none ended up more than a frame early. Validated on synthetic speech only. 28/28 tests pass with both models.
+
 ## Why this exists
 
 The conversation that led to this design was large. The user created `https://github.com/steveonw/movie-skill-for-ai` as a **durable project memory** so a future assistant can continue without depending on previous chat context. Preserve and update this handoff as decisions or implementations change. Do not assert a feature is functional until tested.

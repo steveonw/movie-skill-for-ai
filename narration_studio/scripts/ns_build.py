@@ -8,6 +8,7 @@ Modes
 """
 import json
 import os
+import re
 import tempfile
 from pathlib import Path
 
@@ -17,7 +18,7 @@ import hashlib
 
 from ns_audio import assemble, load_audio, read_wav, sha256_file, speech_bounds, write_wav
 from ns_cache import ClipCache
-from ns_text import load_input
+from ns_text import load_input, word_units
 
 TOOL_VERSION = "0.1.0"
 SCHEMA = "filmkit/narration@1.0"
@@ -121,13 +122,14 @@ def write_outputs(out_dir, mode, events, master, rate, extra):
                 "kind": seg.get("kind", "line"), "paragraph": seg.get("paragraph"),
                 "source_text": seg.get("source_text"), "display_text": seg.get("display_text"),
                 "spoken_text": seg.get("spoken_text"), "substitutions": seg.get("substitutions", []),
+                "words": seg.get("words") or word_units(seg.get("display_text") or "", []),
                 "start_sample": ev["start_sample"], "end_sample": ev["end_sample"],
                 "start_seconds": _seconds(ev["start_sample"], rate),
                 "end_seconds": _seconds(ev["end_sample"], rate),
                 "speech_start_sample": ev["start_sample"] + rel[0] if rel else None,
                 "speech_end_sample": ev["start_sample"] + rel[1] if rel else None,
-                "speech_bounds_source": "energy_threshold_10ms" if rel else "not_detected",
-                "word_times": [],
+                "speech_bounds_source": ev.get("speech_source") or ("energy_threshold_10ms" if rel else "not_detected"),
+                "word_times": seg.get("word_times") or [],
             }
             for k in ("voice", "cache", "clip_source", "processing"):
                 if ev.get(k) is not None:
@@ -334,7 +336,8 @@ def import_readaloud(audio_path, labels_path, out_dir):
             b = total
         if a > cursor:
             events.append({"type": "silence", "frames": a - cursor, "kind": "inferred_from_labels",
-                           "reason": "lead_in" if cursor == 0 else "gap", "requested_seconds": None})
+                           "reason": "lead_in" if cursor == 0 else "gap", "requested_seconds": None,
+                           "samples": samples[cursor:a]})
         clip = samples[a:b]
         seg = {"id": f"s{i:03d}", "speaker": "narrator", "kind": "line", "paragraph": None,
                "source_text": text, "display_text": text, "spoken_text": None, "substitutions": []}
@@ -342,9 +345,10 @@ def import_readaloud(audio_path, labels_path, out_dir):
         cursor = b
     if cursor < total:
         events.append({"type": "silence", "frames": total - cursor, "kind": "inferred_from_labels",
-                       "reason": "tail", "requested_seconds": None})
+                       "reason": "tail", "requested_seconds": None, "samples": samples[cursor:]})
     master, events = assemble(events, rate, samples.shape[1])
-    assert master.shape[0] == total
+    if not np.array_equal(master, samples):
+        raise AssertionError("internal error: re-tiled audio differs from the imported audio")
     extra = {"source": {"file": Path(audio_path).name, "sha256": sha256_file(audio_path),
                         "labels": Path(labels_path).name, "labels_sha256": sha256_file(labels_path),
                         "note": "Read-Aloud labels carry the draft text; pronunciation-dictionary "
@@ -353,6 +357,203 @@ def import_readaloud(audio_path, labels_path, out_dir):
     if processing:
         extra["processing"] = processing
     return write_outputs(out_dir, "imported_readaloud", events, master, rate, extra)
+
+
+LOW_CONFIDENCE = 0.5
+SEGMENT_FOUND = 0.3        # mean letter-match below this: line treated as missing from the recording
+SEGMENT_DOUBTFUL = 0.7     # mean below this: line probably differs from the script
+
+
+def align_recording(recording, story, out_dir, recognizer, config=None):
+    """A narration recorded outside this tool + its script -> narration.json.
+
+    The recording is the timing authority and is copied unchanged (as PCM)
+    into narration.wav. Each script line is located by recognizing the
+    recording and aligning the heard words to the script's words; word starts
+    are refined against the audio. Lines that can't be found, or that seem
+    to differ from the script, are reported as warnings, never silently fixed.
+    """
+    from ns_words import (ASR_EARLY_BIAS, METHOD, VALIDATION, align_units, energy_envelope,
+                          heard_chars, refine_sequence, transcribe_long)
+    config = config or {}
+    items, raw_text = load_input(story, config.get("pronunciations"), config.get("detect_speakers", True))
+    segs = [i for i in items if i["type"] == "segment"]
+    if not segs:
+        raise ValueError(f"{story}: no speakable text found")
+    samples, rate, processing = load_audio(recording)
+    total = samples.shape[0]
+    heard_text, tokens = transcribe_long(recognizer, samples, rate)
+    heard, times = heard_chars(tokens)
+    units = [{"key": (si, w["id"]), "spoken": w["spoken"]}
+             for si, s in enumerate(segs) for w in s["words"] if not w.get("spoken_with_previous")]
+    raw = align_units(units, heard, times)
+    env, win = energy_envelope(samples, rate)
+    timed = refine_sequence([u["key"] for u in units], raw, env, win, rate)
+
+    peak = float(env.max()) if len(env) else 0.0
+    quiet = max(10 ** (-50 / 20), peak * 10 ** (-30 / 20))
+
+    def speech_end_after(start_sample, limit):
+        """First point after start where the audio stays quiet for 120 ms (or limit)."""
+        i, need = start_sample // win + int(0.1 * rate / win), max(1, int(0.12 * rate / win))
+        run = 0
+        while i < min(len(env), limit // win):
+            run = run + 1 if env[i] < quiet else 0
+            if run >= need:
+                return (i - need + 1) * win
+            i += 1
+        return limit
+
+    warnings, placed = [], []
+    for si, seg in enumerate(segs):
+        keys = [(si, w["id"]) for w in seg["words"] if not w.get("spoken_with_previous")]
+        confs = [timed[k]["confidence"] for k in keys]
+        starts = [timed[k]["start_sample"] for k in keys if timed[k]["start_sample"] is not None]
+        mean_conf = sum(confs) / len(confs) if confs else 0.0
+        if not starts or mean_conf < SEGMENT_FOUND:
+            warnings.append(f"Line {seg['id']} ({seg['display_text'][:50]!r}) was not found in the recording "
+                            f"(match {mean_conf:.0%}); left out of the timing.")
+            continue
+        if mean_conf < SEGMENT_DOUBTFUL:
+            warnings.append(f"Line {seg['id']} ({seg['display_text'][:50]!r}) only partly matches the recording "
+                            f"(match {mean_conf:.0%}); the reading may differ from the script.")
+        seg["_si"], seg["_start"], seg["_last_word"], seg["_conf"] = si, min(starts), max(starts), mean_conf
+        placed.append(seg)
+    events, cursor = [], 0
+    for n, seg in enumerate(placed):
+        start = max(seg["_start"], cursor)
+        limit = placed[n + 1]["_start"] if n + 1 < len(placed) else total
+        end = speech_end_after(max(seg["_last_word"], start), limit)
+        if end <= start:
+            warnings.append(f"Line {seg['id']} overlaps the next line in the recording; left out.")
+            continue
+        if start > cursor:
+            gap = samples[cursor:start]
+            events.append({"type": "silence", "frames": start - cursor, "kind": "gap_in_recording",
+                           "reason": "lead_in" if cursor == 0 else "gap", "requested_seconds": None,
+                           "samples": gap})
+            genv, gwin = energy_envelope(gap, rate)
+            if (genv > quiet).sum() * gwin / rate > 0.3 and (start - cursor) / rate > 0.5:
+                warnings.append(f"Speech between {cursor / rate:.2f}s and {start / rate:.2f}s isn't in the script "
+                                "(ad-lib, retake or a missing line?).")
+        entries = []
+        for w in seg["words"]:
+            t = timed.get((seg["_si"], w["id"]))
+            if w.get("spoken_with_previous") or t is None:
+                continue
+            e = {"word_id": w["id"], "text": w["text"], "start_sample": t["start_sample"], "end_sample": None,
+                 "confidence": t["confidence"], "source": METHOD, "how": t["how"]}
+            if t.get("raw_sample") is not None:
+                e["raw_asr_sample"] = t["raw_sample"]
+            if e["start_sample"] is not None:
+                e["start_sample"] = min(max(e["start_sample"], start), end - 1)
+                e["start_seconds"] = _seconds(e["start_sample"], rate)
+            if t["confidence"] < LOW_CONFIDENCE:
+                e["low_confidence"] = True
+            entries.append(e)
+        timed_entries = [e for e in entries if e["start_sample"] is not None]
+        for cur, nxt in zip(timed_entries, timed_entries[1:] + [None]):
+            cur["end_sample"] = max(nxt["start_sample"] if nxt else end, cur["start_sample"] + 1)
+        seg["word_times"] = entries
+        events.append({"type": "clip", "segment": seg, "samples": samples[start:end],
+                       "speech": (0, end - start), "speech_source": "asr_alignment"})
+        cursor = end
+    if cursor < total:
+        events.append({"type": "silence", "frames": total - cursor, "kind": "gap_in_recording",
+                       "reason": "tail", "requested_seconds": None, "samples": samples[cursor:]})
+    master, events = assemble(events, rate, samples.shape[1])
+    if not np.array_equal(master, samples):
+        raise AssertionError("internal error: re-tiled audio differs from the recording")
+    for seg in placed:
+        for k in ("_si", "_start", "_last_word", "_conf"):
+            seg.pop(k, None)
+    extra = {"source": {"file": Path(story).name, "sha256": hashlib.sha256(raw_text.encode("utf-8")).hexdigest(),
+                        "recording": Path(recording).name, "recording_sha256": sha256_file(recording)},
+             "heard_text": heard_text,
+             "word_timing": {"available": True, "segments": [s["id"] for s in placed], "method": METHOD,
+                             "recognizer": recognizer.identity, "early_bias_seconds": ASR_EARLY_BIAS,
+                             "validation": VALIDATION, "low_confidence_below": LOW_CONFIDENCE,
+                             "note": "Segment bounds come from aligned words: start = first word onset, "
+                                     "end = where the voice stops. Validation figures are for synthetic speech."},
+             "warnings": warnings}
+    if processing:
+        extra["processing"] = processing
+    return write_outputs(out_dir, "aligned_recording", events, master, rate, extra)
+
+
+def _word_key(text):
+    return re.sub(r"[^a-z0-9']", "", (text or "").lower())
+
+
+def add_word_times(out_dir, recognizer, only=None, find=None):
+    """Fill segments[].word_times in an existing narration folder. Audio is untouched.
+
+    only: segment IDs to process; find: words (any case) whose segments to process.
+    Returns (sidecar, {found_word: [entries]}).
+    """
+    from ns_words import ASR_EARLY_BIAS, METHOD, VALIDATION, time_words
+    out_dir = Path(out_dir)
+    side = json.loads((out_dir / "narration.json").read_text(encoding="utf-8"))
+    wav = out_dir / side["audio"]["file"]
+    if sha256_file(wav) != side["audio"]["sha256"]:
+        raise ValueError("narration.wav no longer matches narration.json; rebuild before adding word timing")
+    samples, rate = read_wav(wav)
+    wanted = {_word_key(w) for w in (find or []) if _word_key(w)}
+    chosen = []
+    for seg in side["segments"]:
+        words = seg.get("words") or word_units(seg.get("display_text") or "", [])
+        seg["words"] = words
+        if only and seg["id"] not in only:
+            continue
+        if wanted and not any(_word_key(w["text"]) in wanted for w in words):
+            continue
+        chosen.append(seg)
+    found = {}
+    for seg in chosen:
+        spoken_known = seg.get("spoken_text") is not None
+        units = [{"key": w["id"], "spoken": w["spoken"] if spoken_known else w["text"]}
+                 for w in seg["words"] if not w.get("spoken_with_previous")]
+        a, b = seg["start_sample"], seg["end_sample"]
+        timed, heard = time_words(samples[a:b], rate, units, recognizer, base_sample=a)
+        speech_end = seg.get("speech_end_sample") or b
+        entries, prev = [], None
+        for w in seg["words"]:
+            if w.get("spoken_with_previous") and prev is not None:
+                entries.append({"word_id": w["id"], "text": w["text"], "spoken_with": prev["word_id"],
+                                "start_sample": prev["start_sample"], "source": "covered_by_previous_word"})
+                continue
+            t = timed.get(w["id"], {"start_sample": None, "confidence": 0.0, "how": "unmatched"})
+            e = {"word_id": w["id"], "text": w["text"], "start_sample": t["start_sample"],
+                 "end_sample": None, "confidence": t["confidence"], "source": METHOD, "how": t["how"]}
+            if t.get("raw_sample") is not None:
+                e["raw_asr_sample"] = t["raw_sample"]
+            if e["start_sample"] is not None:
+                e["start_sample"] = min(max(e["start_sample"], a), b - 1)
+                e["start_seconds"] = _seconds(e["start_sample"], rate)
+            if t["confidence"] < LOW_CONFIDENCE:
+                e["low_confidence"] = True
+            entries.append(e)
+            prev = e
+        timed_entries = [e for e in entries if e.get("start_sample") is not None and "spoken_with" not in e]
+        for cur, nxt in zip(timed_entries, timed_entries[1:] + [None]):
+            end = nxt["start_sample"] if nxt else max(speech_end, cur["start_sample"] + 1)
+            cur["end_sample"] = max(end, cur["start_sample"] + 1)
+        seg["word_times"] = entries
+        seg["heard_text"] = heard
+        for e in entries:
+            if wanted and _word_key(e["text"]) in wanted:
+                found.setdefault(e["text"], []).append({"segment": seg["id"], **e})
+    prior = side.get("word_timing") or {}
+    done = sorted(set(prior.get("segments", [])) | {s["id"] for s in chosen},
+                  key=[s["id"] for s in side["segments"]].index)
+    side["word_timing"] = {
+        "available": bool(done), "segments": done, "method": METHOD,
+        "recognizer": recognizer.identity, "early_bias_seconds": ASR_EARLY_BIAS,
+        "validation": VALIDATION, "low_confidence_below": LOW_CONFIDENCE,
+        "note": "word start_sample = refined audible onset (use for reveals, rounded UP to the next frame). "
+                "end_sample = next word's start (approximate). Skip entries flagged low_confidence for reveals."}
+    (out_dir / "narration.json").write_text(json.dumps(side, indent=2, ensure_ascii=False), encoding="utf-8")
+    return side, found
 
 
 def verify(out_dir):
@@ -379,6 +580,10 @@ def verify(out_dir):
             problems.append(f"{ev['id']}: empty or negative span")
         if kind == "silence" and ev.get("kind") == "inserted" and np.any(samples[ev["start_sample"]:ev["end_sample"]]):
             problems.append(f"{ev['id']}: inserted silence contains non-zero samples")
+        if kind == "segment":
+            for w in ev.get("word_times") or []:
+                if w.get("start_sample") is not None and not (ev["start_sample"] <= w["start_sample"] < ev["end_sample"]):
+                    problems.append(f"{ev['id']}/{w['word_id']}: word start outside its segment")
         if kind == "segment" and ev.get("speech_start_sample") is not None:
             if not (ev["start_sample"] <= ev["speech_start_sample"] < ev["speech_end_sample"] <= ev["end_sample"]):
                 problems.append(f"{ev['id']}: speech bounds fall outside its clip")

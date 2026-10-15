@@ -81,12 +81,64 @@ def apply_pronunciations(text, compiled):
     return text, subs
 
 
-def _segment(index, paragraph, kind, speaker, source, compiled):
+EDGE_PUNCT = "\"'“”‘’()[]{}.,!?;:…*_—–-"
+
+
+def word_units(display, compiled, ids=None):
+    """Split display text into words with stable IDs and their spoken form.
+
+    Pronunciation matches are tracked by character span, so a replacement
+    inside one word ("Dr." -> "Doctor") stays on that word, and a phrase
+    spanning several words ("0.000002 FPS") is spoken on its first word with
+    the rest marked as covered by it. Returns [{"id","text","spoken"}], one
+    entry per word containing a letter or digit. `ids` (from script.json)
+    replaces the generated w1..wn when the counts agree.
+    """
+    hits = []
+    for _match, say, pattern in compiled:  # longest-first, non-overlapping
+        for m in pattern.finditer(display):
+            if all(m.end() <= a or m.start() >= b for a, b, _ in hits):
+                hits.append((m.start(), m.end(), say))
+    hits.sort()
+    units = []
+    for tok in re.finditer(r"\S+", display):
+        a, b = tok.span()
+        out, p, covered_by_previous = [], a, False
+        while p < b:
+            hit = next((h for h in hits if h[0] <= p < h[1]), None)
+            if hit is None:
+                out.append(display[p])
+                p += 1
+            elif hit[0] == p:
+                out.append(hit[2])
+                p = min(hit[1], b) if hit[1] <= b else b
+            else:  # inside a phrase that started in an earlier word
+                covered_by_previous = True
+                p = min(hit[1], b)
+        text = tok.group().strip(EDGE_PUNCT)
+        if not any(ch.isalnum() for ch in text):
+            continue
+        spoken = "".join(out).strip(EDGE_PUNCT)
+        unit = {"id": None, "text": text, "spoken": spoken}
+        if covered_by_previous and not spoken:
+            unit["spoken_with_previous"] = True
+        units.append(unit)
+    if ids and len(ids) == len(units):
+        for unit, wid in zip(units, ids):
+            unit["id"] = str(wid)
+    else:
+        for i, unit in enumerate(units, 1):
+            unit["id"] = f"w{i}"
+    return units
+
+
+def _segment(index, paragraph, kind, speaker, source, compiled, word_ids=None):
     display = clean_markdown(source)
     spoken, subs = apply_pronunciations(display, compiled)
     return {"type": "segment", "index": index, "paragraph": paragraph, "kind": kind,
             "speaker": speaker, "source_text": source, "display_text": display,
-            "spoken_text": spoken, "substitutions": subs}
+            "spoken_text": spoken, "substitutions": subs,
+            "words": word_units(display, compiled, word_ids)}
 
 
 def parse_story(text, pronunciations=None, detect_speakers=True):
@@ -151,8 +203,9 @@ def parse_script_json(data, pronunciations=None):
     compiled = compile_pronunciations(pronunciations)
     items = []
     for i, seg in enumerate(data.get("segments", []), 1):
+        word_ids = [w["id"] for w in seg.get("words", []) if "id" in w] or None
         item = _segment(i, seg.get("paragraph", i), seg.get("kind", "line"),
-                        seg.get("speaker", "narrator"), seg["text"], compiled)
+                        seg.get("speaker", "narrator"), seg["text"], compiled, word_ids)
         item["id"] = str(seg["id"])
         items.append(item)
         if seg.get("pause_after") is not None:

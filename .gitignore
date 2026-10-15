@@ -5,3 +5,8 @@ out/
 vits-*/
 kokoro-*/
 *.tar.bz2
+sherpa-onnx-*/
+# personal recordings dropped at the repo root
+/*.mp3
+/*.wav
+/*.m4a
