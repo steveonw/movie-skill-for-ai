@@ -2,6 +2,10 @@
 
 This repository is the durable working home of a low-cost, AI-directed story-to-video toolkit made from **three standalone but interoperable ChatGPT Skills**: Story Director, Narration Studio, and Movie Builder.
 
+## AI collaboration and session ownership
+
+Follow [WORKSHOP.md](WORKSHOP.md) for clock-in, issue-based message board comments, progress findings, takeover, and clock-out handoffs. A GitHub status entry does not mean an AI continues working after its chat/session ends. Do not mark tasks claimed before actually beginning the associated work.
+
 ## On every new session
 
 1. Read `AI_HANDOFF.md`, `CONVERSATION_SUMMARY.md`, `DECISIONS.md`, and `ROADMAP.md`.
