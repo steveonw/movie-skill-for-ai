@@ -1,0 +1,25 @@
+{
+  "archive": "Original four multi-AI planning responses; lossless copies",
+  "files": [
+    {
+      "name": "video director skill promp 1.md",
+      "size": 128898,
+      "sha256": "f4d3c1defde9bafd5233cfe843f09a35c1feb1f5c361ceec0ab1a4922fd01b2b"
+    },
+    {
+      "name": "naratarion skills promp 2.md",
+      "size": 158168,
+      "sha256": "8f5de616af3c9bdd9a31da1dd4c8b7bcd264348a79cb113d933db923b8e92bb3"
+    },
+    {
+      "name": "movie maker prompt 3.md",
+      "size": 181060,
+      "sha256": "00064c4ebf3b17738b87cbc3c4a9097488946db4ed21266cd9bf958065ffa9ce"
+    },
+    {
+      "name": "prompt 4 extra info and plans for combine.md",
+      "size": 174916,
+      "sha256": "084047ac48916d18ffa40d150332308928db8e8248c5dfbe72ce9e9635ddc762"
+    }
+  ]
+}
