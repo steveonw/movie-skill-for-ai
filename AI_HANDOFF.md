@@ -2,6 +2,14 @@
 
 **Last curated:** 2026-10-14. **Read this entire file at the beginning of any new chat or coding session.**
 
+## READ THIS FIRST — MISSION, NOT CLOCK-IN PROCEDURE
+
+The owner wants **a functioning, low-cost filmmaking workflow**, not a project-management simulation. We are building **three independently useful ChatGPT Skills**: Story Director (creative plan), Narration Studio (voice and measured timing), Movie Builder (visual composition and MP4 rendering). They can optionally exchange `script.json`, `plan.json`, `narration.json`, and `timeline.json`.
+
+The optional [AI Workshop Protocol](WORKSHOP.md) exists to help AI sessions coordinate through GitHub. Clock-in/out comments are **not** the goal, are not a prerequisite for helping the user, and do not imply autonomous background execution. A new AI should learn the product objective, inspect current code and open issues, then work on a concrete filmmaking milestone. If GitHub issue comments are unavailable, proceed and leave a handoff in your normal response.
+
+**Repo/PR state at this documentation update:** `main` contains durable research, the user-provided calculus sample MP4, and project docs. A first 5-image/7s synthetic-audio Movie Builder technical prototype is on `work/movie-builder-m1` in draft PR #3 until merged. It is not a finished Skill. Issue #1 tracks the remaining checks. **Always verify live PR state; this paragraph may become outdated after merging.**
+
 ## Why this exists
 
 The conversation that led to this design was large. The user created `https://github.com/steveonw/movie-skill-for-ai` as a **durable project memory** so a future assistant can continue without depending on previous chat context. Preserve and update this handoff as decisions or implementations change. Do not assert a feature is functional until tested.
@@ -12,7 +20,7 @@ User writes humorous short stories and wants a low-cost, mostly automatic way to
 
 The example short story is **“DOOM: Chalkboard Edition”**: students simulate DOOM by hand-drawing frames on a chalkboard, 14 hours per frame, a bored man says “Bang,” a 23-day door sequence, exhausted Kevin, terrible frame rates, and absurd YouTube comments. Humor comes from rigorous, serious documentary presentation of an inherently silly undertaking. Exact statistics are better code-rendered than entrusted to image models; protect comedic reveals.
 
-An earlier **MTH263 Calculus Exam Review** video, approximately 8m50s, used AI-generated educational still pictures, narration and automated assembly. User considers it a proof of concept. Prior discussion noted imperfect semantic alignment between some visuals and spoken mathematics. **That file is not stored in this repository; request it if needed.** Do not say its original frames were hand-drawn diagrams.
+An earlier **MTH263 Calculus Exam Review** video, approximately 8m50s, used AI-generated educational still pictures, narration and automated assembly. User considers it a proof of concept. Prior discussion noted imperfect semantic alignment between some visuals and spoken mathematics. **The user subsequently committed this video to the repository as `MTH263_Calculus_Exam_Review_Narrated.mp4`.** Do not say its original frames were hand-drawn diagrams.
 
 ## Significant discovery: Read-Aloud-Main
 
