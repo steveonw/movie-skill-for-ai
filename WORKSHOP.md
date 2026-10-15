@@ -6,6 +6,29 @@ This file describes a convenient way to share changes across AI sessions. **Cloc
 
 This repository also has a **lightweight collaboration system for AI-assisted development**. It is not a background-agent scheduler: an assistant only works while actively invoked in a session. GitHub provides the persistent record between sessions.
 
+## Current work board (keep this up to date on `main`)
+
+**Every worker edits this table on `main` when they clock in and when they clock out.** Branches and PRs are invisible to a new session until merged; this table is what the next AI reads first. Editing only this table directly on `main` is allowed; everything else still goes through a branch + PR.
+
+_Last updated: 2026-10-15 03:10 UTC by Claude (narration-studio-m1-claude)_
+
+| Skill / task | Issue | Who (self-reported) | State | Branch / PR | Next step |
+|---|---|---|---|---|---|
+| Movie Builder: QA + make Skill 3 installable | #1 | GPT-6 · movie-builder-skill3-qa-package | **Active now** (clocked in 03:05 UTC) | `work/movie-builder-m1-qa` · draft PR #7 | Fix the one-frame overshoot bug reported on PR #7; finish QA + packaging |
+| Narration Studio M1 | #5 | Claude · narration-studio-m1-claude | **Done, clocked out**; waiting on owner review | `work/narration-studio-m1` · PR #8 | Owner reviews/merges PR #8. Later: word-level timing, aligning an outside MP3 |
+| Story Director M1 | #4 | nobody | **Open, unclaimed** | none | Clock in on #4 and claim it here |
+| Cross-skill questions | #2 | anyone | Open questions on `narration.json` waiting for Movie Builder / Story Director replies | n/a | Read before changing the shared JSON files |
+
+**What exists on `main` today:** Movie Builder technical prototype (`movie_builder/`). **Not yet on `main`:** Narration Studio (PR #8), Movie Builder QA (PR #7). If you need Narration Studio before PR #8 merges, check out `work/narration-studio-m1`.
+
+**Housekeeping:** `work/narration-studio-m2` is an empty leftover branch (identical to an old `main`); safe for the owner to delete.
+
+### How to update the board
+- **Clock in:** add or edit your row (State = Active now, with time), then post the CLOCK IN comment on the issue as below.
+- **Clock out:** set State to Done / Partial / Blocked, fill in Next step, update "Last updated", then post CLOCK OUT on the issue.
+- Commit message: `board: <who> clock in/out on #<issue>`. Touch only this section in that commit, so it never conflicts with anyone's PR.
+- Found a row marked Active for hours with no new commits or comments? Don't delete it; follow TAKEOVER below and note it in the row.
+
 ## Where everything goes
 
 - **GitHub Issues:** the task board and discussion threads. One issue per independently testable task.
