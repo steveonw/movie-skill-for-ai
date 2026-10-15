@@ -1,79 +1,112 @@
-# AI Workshop — Issue #2 Is the Main Communication Hub
+# Multi-Agent Workshop — Selective GitHub Collaboration
 
-**Project mission:** Build three standalone, interoperable filmmaking Skills: Story Director, Narration Studio and Movie Builder. Useful movies, working code and tested outputs take priority over project-management rituals.
+**Objective:** Build three independently useful filmmaking Skills—Story Director, Narration Studio, and Movie Builder—and integrate them into a reliable story-to-MP4 workflow. **Working movies and tested code matter more than managing agents.**
 
-**Single coordination location:** [GitHub Issue #2 — AI Workshop Message Board](https://github.com/steveonw/movie-skill-for-ai/issues/2). **All agents use Issue #2 for clock-ins, clock-outs, work claims, cross-Skill messages, review requests and decisions.** Do not use a live table in this Markdown file or commit to `main` for routine attendance/claim updates. This document holds stable rules only; Issue #2 holds the conversation and its history.
+**Shared channel: [GitHub Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2).** This is the project's equivalent of the classroom experiment's `TRANSMIT:` bus. Independent sessions selectively publish information for the others, instead of exposing their full working conversations. Issue #2 remains open throughout the project. This document describes the protocol; do not edit it for routine check-ins.
 
-There are **no continuously running background agents**. Comments are messages for future sessions and people. A posted `CLOCK IN` is not evidence an AI remains online, and Issue #2 comments do not automatically trigger other agents.
+## 1. The four seats
 
-## Starting a coding session — read, claim, then work
+| Seat / workstream | Primary responsibility | Existing tracking |
+| --- | --- | --- |
+| AI-1 — Story Director | Story beats, visual planning, setup/payoff, intentional reveals | [Issue #4](https://github.com/steveonw/movie-skill-for-ai/issues/4) |
+| AI-2 — Narration Studio | Narration, audio assembly, sample-exact speech/word timing | [Issues #5 and #9](https://github.com/steveonw/movie-skill-for-ai/issues/5) |
+| AI-3 — Movie Builder | Timed visuals, rendering, FFmpeg, encoded output QA | [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) |
+| AI-4 — Integrator / QA | Review interoperability, investigate contract conflicts, end-to-end acceptance | Cross-Skill PRs and Issue #2 |
 
-1. **Check Issue #2 first:** read recent comments, identify open questions and locate the latest `CLOCK IN`, `CLOCK OUT`, or `TAKEOVER` for your intended files. Follow links to the current task issue, branches and pull requests; inspect current repository state rather than trusting a stale status comment.
-2. **Pick a narrow deliverable:** identify the task issue, specific files, working branch/PR and repeatable acceptance test. Separate ownership of Story Director, Narration Studio and Movie Builder where possible.
-3. **CLOCK IN on Issue #2:** when you begin substantial code editing, post **one brief comment** like this:
+These are **roles, not assigned model identities**. Gemini, Claude, GPT, Grok, other assistants, or human developers can occupy a seat for a session; identify the actual worker in any message. The repository owner/human coordinator is **separate from the four seats** and retains final authority over shared decisions. Fewer than four sessions may be active; never invent an agent or imply that one is running.
 
-```markdown
-### CLOCK IN — [worker / session identifier]
-- Task: #[issue] — [specific deliverable]
-- Branch/PR: [link or planned name]
-- Editing: [exact paths or narrow directory]
-- Check: [test or observable deliverable]
-- Need from others: [none / named question]
-```
+## 2. Information flow: private working context, selective transmissions
 
-4. **Avoid collisions:** another worker's claimed files or unmerged PR require review and coordination before edits. Reply on Issue #2 with a conflict question or choose separate files. Use your own branch; do not force-push someone else's work.
-5. **Work on the deliverable.** A clock-in is not a permission gate. If GitHub comments are unavailable, continue useful work, note the coordination limitation and provide a clear handoff.
+An AI may have its own chat, tools, notes, research and tests. These **are not automatically synchronized with other AI chats**. When the findings matter to another seat, explicitly post **one concise message starting with `TRANSMIT:`** as an **Issue #2 comment**. The other seats read these transmissions the next time they are invoked.
 
-A brief question, read-only review, or owner-requested tweak to this coordination protocol does **not** need ceremonial clock-in and clock-out posts.
+**Only a `TRANSMIT:` message is intended as a team-wide AI-to-AI broadcast in this protocol.** Historical Issue #2 comments without this marker remain readable, but new workers should follow this convention. GitHub itself does **not** restrict visibility based on a prefix: all public repo issues, comments, branches and PRs are public. Never publish private reasoning, API keys, unpublished manuscripts, recordings, full chats or sensitive materials to GitHub.
 
-## Issue #2 is the conversation, not just a noticeboard
-
-Post actionable messages **in Issue #2**, including:
-- `CLOCK IN`: who is doing what, branch, and file scope.
-- `QUESTION / REQUEST — [source -> recipient]`: one decision or artifact needed from another Skill or the owner/master AI. State why, link the issue/PR, and say who should answer.
-- `FINDING / BLOCKED / REVIEW REQUEST`: measured facts or obstacles others need to act on, with direct links to evidence.
-- `DECISION — [owner / designated integrator]`: accepted cross-Skill contract choice, affected fields/versions and follow-up documentation/tests. A proposal is **not** an approved contract.
-- `CLOCK OUT / HANDOFF`: links to the completed or draft deliverable, what actually ran, what remains and an explicit claim release.
-
-**Replies belong primarily on Issue #2 when coordinating across agents.** Keep long stack traces, detailed tests, code discussion and changed-file reviews in the specific task issue or PR, then link them from a short Issue #2 comment. Do not duplicate the same technical report in multiple places. One useful update is better than many trivial status messages.
-
-Cross-Skill request example:
+Use this compact format:
 
 ```markdown
-### QUESTION — Movie Builder -> Narration Studio / owner
-- Related: #1, PR #7, PR #8
-- Need: accepted field and sample units for audible speech start
-- Why: movie cuts should not reveal a punchline before its spoken anchor
-- Proposal (unapproved): ceil measured start samples to the next video frame
-- Reply: here on Issue #2; link schema approval when decided
+TRANSMIT: [TYPE] — [FROM seat / model / session] -> [TO seat, owner, or ALL]
+- Context: [task issue / branch / PR / source comment link]
+- Message: [the specific finding, question, request, or result]
+- Evidence: [tested command/result and link, or explicitly PROPOSED / UNVERIFIED]
+- Needed: [one action or decision; "none" if FYI]
 ```
 
-## Finish and hand off on Issue #2
+Valid types: `CLOCK IN`, `FINDING`, `QUESTION`, `REQUEST`, `BLOCKED`, `REVIEW`, `HANDOFF / CLOCK OUT`, and `TAKEOVER`. **Do not transmit every intermediate thought** or repeat a complete PR description. Link supporting files/tests rather than pasting large dumps.
 
-When a session with a `CLOCK IN` ends, **post one `CLOCK OUT / HANDOFF` on Issue #2**. This is how other agents know a file claim was released; no row on `main` needs changing.
+## 3. Human coordinator broadcasts and decisions
+
+The owner/coordinator can post a message on Issue #2 beginning **`BROADCAST:`** with scope, goal, constraints and recipients. A worker reads and acknowledges it *in its next active session* when necessary. A GitHub comment does not invoke a model, wake a worker, start a job or create a background scheduler.
+
+Any worker can **propose** interface changes using `TRANSMIT: QUESTION` or `TRANSMIT: REQUEST`. Only the human owner or an explicitly designated integrator with authority may issue an **approved** shared-contract decision, e.g.:
 
 ```markdown
-### CLOCK OUT / HANDOFF — [worker / same session identifier]
-- Task/PR: #[issue] / [branch or PR link]
-- Done: [concrete artifact or changed files]
-- Verified: [command + observed result, or "not run"]
-- Still needed: [one clear next step or blocker]
-- Impact on other Skills: [none / specific request]
-- File claim released: Yes
+BROADCAST: DECISION — owner/coordinator
+- Decision: [precise fields / units / schema version / rule]
+- Applies to: [affected Skills and issues]
+- Evidence and migration: [PR/tests and compatibility requirements]
+- Follow-up: [who updates ARCHITECTURE.md / DECISIONS.md]
 ```
 
-If the worker also needs a detailed task-specific handoff, put the full evidence on the task issue or PR and link it. Keep the Issue #2 comment short.
+A worker's unilateral `TRANSMIT:` is not contract approval. Pending proposals remain provisional. Do not block unrelated standalone work while waiting on a cross-Skill choice.
 
-## Stale claims and takeovers
+## 4. Clock-in means avoiding collisions, not attendance
 
-A clock-in is an advisory claim, **not a lock**. Do not assume that a worker is active merely because it did not clock out. For an apparently abandoned claim, inspect Issue #2's latest comments, the task issue, branch and PR activity. A claim older than 12 hours is a reason to inspect, **not an automatic expiry**. If there is no conflicting active work, post `TAKEOVER` on Issue #2 with the prior claim link, evidence checked, new scope and branch. Do not delete branches or overwrite unmerged work.
+Before substantive coding, read Issue #2's **recent comments**, active PRs and the intended files. Post one short transmission:
 
-## Ownership and source of truth
+```markdown
+TRANSMIT: CLOCK IN — [seat / model / unique session] -> ALL
+- Context: #issue; branch/PR
+- Message: Implementing [small, testable deliverable]. Editing [exact paths].
+- Evidence: planned acceptance test [command or check] — NOT YET RUN
+- Needed: [specific coordination, or none]
+```
 
-- **Issue #2:** single home for coordination, current session claims, questions, decisions and handoffs. Keep it open throughout development unless the repository owner retires it.
-- **Task issues (#1 Movie Builder, #4 Story Director, #5 Narration Studio, etc.):** acceptance criteria and detailed task-specific evidence.
-- **PRs/branches:** code and reviews; use them instead of changing `main` directly for implementation.
-- **AGENTS.md / AI_HANDOFF.md / ROADMAP.md / ARCHITECTURE.md / DECISIONS.md:** durable project instructions and accepted designs. Update only when substance changes, not for each clock-in.
-- **research/originals/:** preserve immutable historical research.
+Work on a reviewable branch. A claim is an **advisory reservation** of specific files, not an exclusive GitHub lock or proof of continuing activity. Check overlapping unmerged PRs, split files or request coordination rather than overwriting someone else's work. For tiny documentation-only edits or read-only reviews, don't generate unnecessary clock-in/out chatter.
 
-Tests and current code outrank prose status claims. Never label a synthetic-audio proof as a finished narrated movie, invent tests or promise background execution. **The purpose of the workshop is to let separate sessions coordinate effectively while they build a working filmmaking toolkit.**
+After the session, post the matching **`TRANSMIT: HANDOFF / CLOCK OUT`** with links to commits/PR, executed tests (or *not run*), unresolved defects, next task, and **claim released**. The full logs, changes and test detail stay on the task issue or PR.
+
+An old claim is not proof a chat is alive. If a prior worker has not signed off, inspect issue comments/PR activity and report why takeover is safe before editing shared files. A ~12-hour-old comment calls for investigation, **not automatic expiration**. Never delete another worker's branch or force-push it.
+
+## 5. AIDE requests and independent work
+
+In the classroom experiment, `AIDE REQUEST:` delegated focused work to a personal assistant and the coordinator pasted back `AIDE OUTPUT`. In the GitHub variant:
+
+- Within an AI's **own session**, request focused research, coding, web lookup, or tests from available tools or a connected aide. Use `AIDE REQUEST: [specific question and success criteria]` **only if that session actually has an aide workflow**.
+- The worker evaluates evidence locally. A tool run is not a separate autonomous teammate; don't manufacture an aide or claim a test happened unless it actually ran.
+- Transmit only the result another seat needs, e.g. `TRANSMIT: FINDING` with test evidence and a PR/issue link. If the human coordinator supplies external aide output, distinguish it from independently reproduced tests.
+
+No worker must possess the same tools as any other worker.
+
+## 6. Normal workflow and example
+
+1. **Read:** an active worker inspects recent Issue #2 `BROADCAST:` and `TRANSMIT:` messages, linked issues and PRs.
+2. **Self-organize:** choose an unclaimed scope consistent with the project's mission; only ask the owner for choices that truly require owner authority.
+3. **Work independently:** reason and use tools inside the worker's own session; commit tests and code on its own branch.
+4. **Transmit selectively:** findings, dependency requests, concrete milestones and review requests go to Issue #2 with a recipient. Other public issue/PR comments are supporting context, not automatic team transmissions.
+5. **Handoff:** record exact tested results, limitations and released file claims. Future sessions pick up from this evidence.
+
+**Example dialogue (illustrative, not an actual transmission):**
+
+```markdown
+TRANSMIT: QUESTION — Movie Builder / GPT session -> Narration Studio, Integrator
+- Context: Movie Builder #1; narration PR #8
+- Message: Which absolute sample field represents audible speech onset?
+- Evidence: Our cut planner needs an anchor; a clip boundary can precede speech.
+- Needed: Confirm field and provenance so we can test frame-ceiling behavior.
+
+TRANSMIT: FINDING — Narration Studio / Claude session -> Movie Builder
+- Context: narration schema and its regression tests
+- Message: Proposed speech_start_sample is absolute in narration.wav.
+- Evidence: link to tested schema/PR; word alignment availability noted.
+- Needed: Owner/integrator decision before treating this as a frozen contract.
+```
+
+## 7. Source of truth and boundaries
+
+- **Issue #2:** one central message bus for `TRANSMIT:` and `BROADCAST:`, clock-in/handoff and cross-Skill discussions.
+- **Task issues:** independently testable acceptance criteria, task-specific evidence.
+- **Branches/PRs:** authoritative code changes, detailed tests and review.
+- **AGENTS.md / AI_HANDOFF.md / ARCHITECTURE.md / DECISIONS.md / ROADMAP.md:** durable product guidance and owner-approved decisions, updated when substance changes.
+- **research/originals/:** preserve archived research unchanged.
+
+Where status disagrees with tested code, trust actual output and correct the status. None of these GitHub conventions establishes private channels or automatic multi-agent execution. **The workshop is a coordination layer for making better movies, not the product itself.**
