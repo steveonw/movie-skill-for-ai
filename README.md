@@ -1,35 +1,62 @@
-# AI Filmmaking Skills — Project Memory
+# AI Movie-Making Skills
 
-**Status:** Planning and preservation; no skill packages or video pipeline have been implemented or tested.  
-**Snapshot:** 2026-10-14
+**Our goal:** Build an affordable, largely automatic filmmaking workflow that turns a **written story or script** (and optionally a recorded voiceover) into a **watchable narrated MP4**. An AI should understand the story, choose and reuse illustrations, place cuts/cards/reveals at the right spoken moments, and assemble the film with FFmpeg. The human should **not** need to hand-edit every scene or JSON timestamp.
 
-Goal: Develop **three standalone-first, cooperative-by-design ChatGPT Skills** that together turn a written story and optionally an MP3 into a watchable narrated movie using AI-generated still images, accurate speech timing, simple motion, and FFmpeg. Minimize cost and manual editing. Maintain modularity.
+**This is a filmmaking project, not an agent attendance or time-clock project.** The optional [AI Workshop](WORKSHOP.md) exists only to help different AI sessions share work and avoid duplicated changes.
 
-## Start here after a conversation reset
+## Start here (human or AI)
 
-**Read [AI_HANDOFF.md](AI_HANDOFF.md) first.** It is written for a fresh AI with no previous chat context.
+**Human:** Read this page, check [ROADMAP.md](ROADMAP.md), then open [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) to see the next engineering goal.
 
-Supporting materials:
-- [ARCHITECTURE.md](ARCHITECTURE.md) — Skill boundaries and provisional interoperability contract.
-- [DECISIONS.md](DECISIONS.md) — accepted, contested, deferred, and unverified decisions.
-- [ROADMAP.md](ROADMAP.md) — first implementation and validation milestones.
+**AI joining the project:** Read [AI_HANDOFF.md](AI_HANDOFF.md) for purpose, history, current reality and next step. Read [AGENTS.md](AGENTS.md) for implementation rules. Check the actual main branch, open issues and pull requests **before** writing code. The [workshop procedure](WORKSHOP.md) is a coordination aid and must never prevent useful work if unavailable.
 
-## The three Skills
+**One-sentence mission:** *Story → AI direction → spoken timing → reusable visual assets → MP4 that genuinely matches what the narrator says.*
 
-| Skill | Works independently | When cooperating |
-|---|---|---|
-| **Story Director** | Storyboards, shot/beat lists, image prompts, script and character notes | Outputs a narrative plan with script-based visual anchors |
-| **Narration Studio** | Audiobooks/TTS, multiple speaker voices, script-to-audio alignment, SRT and timing data | Outputs master narration WAV plus segment/word/pause metadata |
-| **Movie Builder** | Narrated slideshow or explainer from supplied images and audio; QA | Resolves plans against audio, generates or reuses images, renders MP4 |
+## Why three Skills?
 
-None requires the other Skills to be installed. The common interface is **files**, not inter-Skill imports. Avoid creating a fourth orchestrator Skill initially.
+We are developing **three separate, independently useful ChatGPT Skills**, with optional cooperation via small versioned files:
 
-## Sources and provenance
+| Skill | What it should do for someone using it alone | How it helps the finished movie |
+| --- | --- | --- |
+| **Story Director** | Read a story and produce a useful storyboard, beat sheet, image prompts, character/style notes | Select shots, recognize comedic setups/payoffs, prevent early reveals; export `script.json` / `plan.json` |
+| **Narration Studio** | Narrate scripts or align existing WAV/MP3, cache TTS clips, export audio/captions/timing | Supply `narration.wav` and `narration.json` with real timings and pauses |
+| **Movie Builder** | Combine supplied images and voiceover into an MP4, even without the other Skills | Render the plan with images, titles, transitions, captions and QA |
 
-The design arose from a multi-round comparison of **Gemini, Claude, Grok, and GPT**, based on four planning prompts (Story Director, Narration Studio, Movie Builder, final integration/revision). Their lengthy raw replies were supplied as four uploaded markdown files in the originating chat; **this repository preserves a curated synthesis, not a verbatim archive of those uploads**.
+**Design rule: Standalone First, Cooperative by Design.** None of these should require the other two to be installed. The video editor is a means to the **creative storytelling goal**, not the entire product.
 
-Key technical inspiration: [Read-Aloud-Main](https://github.com/steveonw/Read-Aloud-Main) by steveonw — per-sentence TTS, cache, explicit silent gaps, WAV and Audacity label export. Repository README and `web/app.js` had been examined in the originating conversation. Borrow the architecture, not necessarily its entire browser/WASM/USB application. Confirm current source before implementing.
+## What the end-to-end experience should look like
 
-## Project rule
+1. Human provides a funny story, educational script or documentary narration. An existing MP3 is optional.
+2. **Story Director** understands the narrative, chooses visual beats, reusable images, timing *intent*, and the appropriate joke reveals.
+3. **Narration Studio** makes or aligns speech and reports measured timing—not invented word timestamps.
+4. **Movie Builder** resolves visual beats against those times, builds a cheap animatic, generates/reuses illustrations, renders exact on-screen words using code, and outputs an MP4.
+5. The movie is checked for real technical quality and whether visuals spoil or contradict key moments.
 
-**Deliver a watchable movie, not just elegant manifests.** Architecture is provisional until it survives real rendering tests. Git history preserves changes to our decisions.
+**Acceptance demo:** A 60–90-second excerpt of *DOOM: Chalkboard Edition*, a deliberately ridiculous, deadpan mockumentary. Images, reaction holds, the spoken “Bang,” and captions must land at the right moments.
+
+## What exists today (2026-10-14)
+
+- **Research and durable handoffs:** committed on `main`, including all four original AI planning files under [research/originals/](research/originals/).
+- **Earlier video reference:** [MTH263_Calculus_Exam_Review_Narrated.mp4](MTH263_Calculus_Exam_Review_Narrated.mp4), provided by the user; this is **not** a Movie Builder Skill deliverable.
+- **First tiny Movie Builder code prototype:** on the **unmerged** branch `work/movie-builder-m1`, in [draft PR #3](https://github.com/steveonw/movie-skill-for-ai/pull/3). It made a simple five-image/seven-second synthetic-audio test MP4 in the originating session. The branch contains a renderer and a demo generator. This is *not* a finished Skill and not yet merged to `main`.
+- **First development task:** [Issue #1](https://github.com/steveonw/movie-skill-for-ai/issues/1) stays open. It needs stronger duration/reveal checks, contact-sheet automation, a reproducible test and real narration.
+
+Do not tell people that the three Skills or the full filmmaking pipeline have already been built.
+
+## Finding the right file
+
+| I want to… | Read |
+| --- | --- |
+| Understand the mission and know where we are | **README.md** (here) |
+| Resume as a new AI with little or no chat history | [AI_HANDOFF.md](AI_HANDOFF.md) |
+| Know current architecture and what can change | [ARCHITECTURE.md](ARCHITECTURE.md), [DECISIONS.md](DECISIONS.md) |
+| Pick the next measurable task | [ROADMAP.md](ROADMAP.md), [GitHub Issues](https://github.com/steveonw/movie-skill-for-ai/issues) |
+| Learn how to contribute or coordinate with another AI | [AGENTS.md](AGENTS.md), [WORKSHOP.md](WORKSHOP.md) |
+| Revisit full raw multi-AI research | [research/originals/](research/originals/), [HISTORY_AND_PROMPTS.md](HISTORY_AND_PROMPTS.md) |
+| See human-readable conversation history | [CONVERSATION_SUMMARY.md](CONVERSATION_SUMMARY.md) |
+
+## How we work
+
+Build the smallest real proof, actually test it, preserve discoveries and avoid architecture sprawl. The workshop's “clock-in / clock-out” comments are **optional recordkeeping**, not a reason to refuse a task and not proof of background agents. If GitHub commenting is unavailable, make useful progress and give a normal written handoff.
+
+**Priority:** make a good movie; then make it repeatable; then make the three Skills pleasant to use.
