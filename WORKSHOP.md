@@ -1,114 +1,79 @@
-# AI Workshop — Shared Coordination, Not Agent Attendance
+# AI Workshop — Issue #2 Is the Main Communication Hub
 
-**Mission:** Produce three independently useful, interoperable filmmaking Skills: Story Director, Narration Studio and Movie Builder. The deliverable is working media and verified code, not clock-in reports.
+**Project mission:** Build three standalone, interoperable filmmaking Skills: Story Director, Narration Studio and Movie Builder. Useful movies, working code and tested outputs take priority over project-management rituals.
 
-**This GitHub repository is shared project memory between human and AI sessions.** There are no persistent background agents. A session only works when a user explicitly starts it. A worker's issue comment is a handoff to *future people or sessions*, not a message to itself.
+**Single coordination location:** [GitHub Issue #2 — AI Workshop Message Board](https://github.com/steveonw/movie-skill-for-ai/issues/2). **All agents use Issue #2 for clock-ins, clock-outs, work claims, cross-Skill messages, review requests and decisions.** Do not use a live table in this Markdown file or commit to `main` for routine attendance/claim updates. This document holds stable rules only; Issue #2 holds the conversation and its history.
 
-## Central communication hub: Issue #2
+There are **no continuously running background agents**. Comments are messages for future sessions and people. A posted `CLOCK IN` is not evidence an AI remains online, and Issue #2 comments do not automatically trigger other agents.
 
-**Read recent comments on the [shared AI workshop board (#2)](https://github.com/steveonw/movie-skill-for-ai/issues/2) at the beginning of each session.** This is the cross-AI message board, where the master AI and other Skill developers can see what is actually happening. It must not become an attendance log.
+## Starting a coding session — read, claim, then work
 
-When a meaningful milestone/PR occurs, **post one short board comment** containing: which Skill/AI, link to the task issue and PR, tested results versus untested claims, the next step, and any request or warning for other Skills. Keep the detailed test logs and handoff on your task issue/PR. On cross-Skill schema questions, request a master/owner decision on #2 and wait for accepted contract updates before treating the proposal as official. Do not announce an invented agent status as active.
-
-## Communication principle
-
-Use GitHub only when the message would change another worker's decision or help a later session resume accurately. **Avoid ceremonial self-messaging.** No repeating status in multiple issues; no daily attendance, timecards, or check-ins with no code or useful discovery. A worker should spend most of the session coding, testing and reviewing.
-
-Use:
-- **Issues:** independently testable work items, dependencies and substantive blockers.
-- **Issue comments:** coordination across owners, tested findings, conflicts, and final handoffs.
-- **Pull requests:** the authoritative reviewable record of code changes, test results and remaining gaps.
-- **AGENTS.md / AI_HANDOFF.md / ROADMAP.md:** shared technical directions and durable current state, updated only for meaningful changes.
-- **WORKSHOP.md (this file):** shared working agreement, plus the **Current claims** table below (who is working on what *right now*). Don't keep an agent activity log here: rows are deleted when work ends, history lives in issues and PRs.
-- **research/originals/:** immutable source archives.
-
-## Clock in: a shared, live file-ownership table on `main`
-
-### Current claims
-
-**The table below is the clock-in.** Add a row **only when beginning a concrete editing session** and remove it at handoff. The point is to stop agents from editing the same files without knowing about each other, not to track attendance or pretend agents are running in the background.
-
-| Worker / session | Issue and deliverable | Branch / PR | Files being edited | Next action / help needed | Claimed (UTC) |
-| --- | --- | --- | --- | --- | --- |
-| _none currently claimed_ | | | | | |
-
-**Find work and outstanding requests:** [open issues](https://github.com/steveonw/movie-skill-for-ai/issues?q=is%3Aissue+is%3Aopen) · [open PRs](https://github.com/steveonw/movie-skill-for-ai/pulls?q=is%3Apr+is%3Aopen) · [cross-agent messages (#2)](https://github.com/steveonw/movie-skill-for-ai/issues/2). Do **not** maintain a manually copied list of "available" issues or PR statuses here; that becomes stale.
-
-### Start work (30-second coordination)
-
-1. **Read first:** fetch the current `main` version of this table, recent #2 posts, the task issue, and existing branches/PRs. An earlier agent's claimed branch may have unmerged changes that must be reviewed before continuing.
-2. **Choose a small scope:** identify one issue, a concrete deliverable, a unique session label, your working branch, and **specific file paths**. A role like "Movie Builder" alone is too broad to serve as a useful claim.
-3. **CLOCK IN:** insert one row in the table on `main`. Example row:
-   `| GPT-6 / 2026-10-14-mb-cuts | #1: prove encoded reveal frames | work/movie-builder-cuts / PR TBD | movie_builder/verify_cuts.py, movie_builder/tests/ | Run cut tests; ask Narration about onset anchors | 2026-10-15 03:30 UTC |`
-   This is an **example only**, not an active claim. Use the actual current UTC time and actual worker/session label.
-4. **Commit only the table edit** to `main` as `claim: <worker/session> #<issue>`. Do not mix code or unrelated documentation with this short claim commit. If a competing edit changed `WORKSHOP.md`, fetch the newest version, re-check for overlapping files, and retry using the latest blob SHA; do not force-push or replace someone else's row.
-5. **Code on your own branch**, not on `main`. A claim is a courtesy reservation of a **file-edit scope**, not ownership of an entire Skill or a lock. If any listed file overlaps another claim or unmerged PR, coordinate or narrow your scope **before** editing it.
-
-For user-requested small edits **to this coordination document itself**, do not create a row just to change and remove that row. Make the requested main-branch edit and report the commit.
-
-If GitHub write access is unavailable, don't block the work: leave an issue/PR comment if possible and explicitly state the overlap uncertainty in your handoff.
-
-### Stale claims and collision handling
-
-A clock-in does **not** mean that an agent is still running. GitHub cannot tell whether a chat session remains active. A claim older than ~12 hours **merits inspection**, but is **not automatically abandoned**. Check the last issue/PR comments and branch commits, then either coordinate with the worker or post a brief **TAKEOVER** on the task issue explaining which files and evidence you checked. Never delete the other worker's branch, force-push their work or silently overwrite their claim. Update the table to reflect the new owner only after that review.
-
-If two sessions reach for the same files, one should take a separate test/review task or create a separate branch and PR. **File claims are advisory; branch and PR history are authoritative.**
-
-## How agents actually communicate
-
-**Issue #2 is for messages meant for another worker or the project integrator.** A message is useful only if the recipient can understand the requested decision or action. Routine clock-ins belong **only in the table**; detailed logs belong **only on the task issue/PR**.
-
-When one Skill needs another, post **one** targeted request on #2:
+1. **Check Issue #2 first:** read recent comments, identify open questions and locate the latest `CLOCK IN`, `CLOCK OUT`, or `TAKEOVER` for your intended files. Follow links to the current task issue, branches and pull requests; inspect current repository state rather than trusting a stale status comment.
+2. **Pick a narrow deliverable:** identify the task issue, specific files, working branch/PR and repeatable acceptance test. Separate ownership of Story Director, Narration Studio and Movie Builder where possible.
+3. **CLOCK IN on Issue #2:** when you begin substantial code editing, post **one brief comment** like this:
 
 ```markdown
-### REQUEST / DECISION NEEDED — [source Skill -> destination Skill or owner]
-- From: [worker/session, issue, PR]
-- To: [Story Director / Narration Studio / Movie Builder / owner or integrator]
-- Need: [one concrete answer, review or artifact]
-- Why it matters: [downstream test blocked or risk of conflict]
-- Proposed default: [specific proposal, explicitly not yet approved]
-- Reply location: [issue or PR link]
+### CLOCK IN — [worker / session identifier]
+- Task: #[issue] — [specific deliverable]
+- Branch/PR: [link or planned name]
+- Editing: [exact paths or narrow directory]
+- Check: [test or observable deliverable]
+- Need from others: [none / named question]
 ```
 
-The recipient, **when invoked in a later active session**, should read #2, respond on the linked issue/PR, and leave one short link back on #2 if the answer affects other Skills. A #2 comment **does not start an agent**, deliver a notification, or authorize an interface change by itself. A proposed shared schema becomes authoritative only when the owner/designated integrator approves it and the appropriate contract docs/tests are updated.
+4. **Avoid collisions:** another worker's claimed files or unmerged PR require review and coordination before edits. Reply on Issue #2 with a conflict question or choose separate files. Use your own branch; do not force-push someone else's work.
+5. **Work on the deliverable.** A clock-in is not a permission gate. If GitHub comments are unavailable, continue useful work, note the coordination limitation and provide a clear handoff.
 
-Other substantive board messages can start with `FINDING`, `REVIEW REQUEST`, or `BLOCKED`, always with a recipient, a link, and a requested next action. Don't post a second "status" comment merely to repeat your PR description.
+A brief question, read-only review, or owner-requested tweak to this coordination protocol does **not** need ceremonial clock-in and clock-out posts.
 
-## During implementation
+## Issue #2 is the conversation, not just a noticeboard
 
-Make the smallest useful and testable change. Work on a dedicated branch and open a PR rather than changing `main` directly, **except for updating the Current claims table or user-requested policy/documentation changes on main**. Avoid edits outside the task's owner directory. Preserve all user-owned artifacts, licensing requirements and sensitive data rules from AGENTS.md.
+Post actionable messages **in Issue #2**, including:
+- `CLOCK IN`: who is doing what, branch, and file scope.
+- `QUESTION / REQUEST — [source -> recipient]`: one decision or artifact needed from another Skill or the owner/master AI. State why, link the issue/PR, and say who should answer.
+- `FINDING / BLOCKED / REVIEW REQUEST`: measured facts or obstacles others need to act on, with direct links to evidence.
+- `DECISION — [owner / designated integrator]`: accepted cross-Skill contract choice, affected fields/versions and follow-up documentation/tests. A proposal is **not** an approved contract.
+- `CLOCK OUT / HANDOFF`: links to the completed or draft deliverable, what actually ran, what remains and an explicit claim release.
 
-Comment on an issue only for something *another session needs to know*:
-- **FINDING:** measured outcome with test evidence or a cross-Skill interface constraint.
-- **QUESTION / BLOCKED:** a genuine decision or resource needed from another owner.
-- **REVIEW:** a concrete request to inspect a PR or contract decision.
-- **TAKEOVER:** why previously claimed files are safe to continue.
+**Replies belong primarily on Issue #2 when coordinating across agents.** Keep long stack traces, detailed tests, code discussion and changed-file reviews in the specific task issue or PR, then link them from a short Issue #2 comment. Do not duplicate the same technical report in multiple places. One useful update is better than many trivial status messages.
 
-Link the relevant issue or PR. **Do not post routine internal thoughts, generic “progress” messages, or duplicate comments in the workshop board.** For cross-Skill changes, report substantive findings/questions on **Issue #2**, with a link to the specific issue/PR. The same technical information should live in detail only once; the board contains concise summaries and cross-links.
-
-## Handoff / clock-out
-
-At the end of a session, leave **one concise, evidence-based handoff** on the relevant issue or PR so the next worker doesn't have to reconstruct the context. Clock-out is encouraged where a claim was made, but it is not more important than the deliverable.
+Cross-Skill request example:
 
 ```markdown
-### HANDOFF / CLOCK OUT — [worker/session]
-- Result: [PR/commit and concrete files]
-- Verified: [commands run + observed outputs]; not run: [anything untested]
-- Remaining: [precise open issues and next action]
-- Coordination: [interface changes / none]
-- Claim released: yes
+### QUESTION — Movie Builder -> Narration Studio / owner
+- Related: #1, PR #7, PR #8
+- Need: accepted field and sample units for audible speech start
+- Why: movie cuts should not reveal a punchline before its spoken anchor
+- Proposal (unapproved): ceil measured start samples to the next video frame
+- Reply: here on Issue #2; link schema approval when decided
 ```
 
-Avoid claiming success merely because tests were written: say which tests *actually ran*, where, and with what outputs. Draft PRs remain works in progress. Don't claim work continues after the session.
+## Finish and hand off on Issue #2
 
-## Source of truth and priorities
+When a session with a `CLOCK IN` ends, **post one `CLOCK OUT / HANDOFF` on Issue #2**. This is how other agents know a file claim was released; no row on `main` needs changing.
 
-1. Executed tests, real renders and inspected assets.
-2. Current code on the linked branch and PR.
-3. Issue acceptance criteria and recent factual handoffs.
-4. AI_HANDOFF.md / ROADMAP.md as a summarized current snapshot.
-5. Earlier planning discussions and historical research.
+```markdown
+### CLOCK OUT / HANDOFF — [worker / same session identifier]
+- Task/PR: #[issue] / [branch or PR link]
+- Done: [concrete artifact or changed files]
+- Verified: [command + observed result, or "not run"]
+- Still needed: [one clear next step or blocker]
+- Impact on other Skills: [none / specific request]
+- File claim released: Yes
+```
 
-If documents disagree with tested code, fix the documentation; don't make vague success claims.
+If the worker also needs a detailed task-specific handoff, put the full evidence on the task issue or PR and link it. Keep the Issue #2 comment short.
 
-**Definition of done:** a useful deliverable exists, acceptance checks were executed and reported (or limitations candidly disclosed), reviewable change history is available, and future work is unambiguously handed off. **CLOCK OUT:** remove your row from the live claims table, then leave one evidence-based handoff on your task issue/PR. If another workstream needs to act, leave one targeted linked notice on #2. The goal remains good movies and independently useful Skills—not management theater.
+## Stale claims and takeovers
+
+A clock-in is an advisory claim, **not a lock**. Do not assume that a worker is active merely because it did not clock out. For an apparently abandoned claim, inspect Issue #2's latest comments, the task issue, branch and PR activity. A claim older than 12 hours is a reason to inspect, **not an automatic expiry**. If there is no conflicting active work, post `TAKEOVER` on Issue #2 with the prior claim link, evidence checked, new scope and branch. Do not delete branches or overwrite unmerged work.
+
+## Ownership and source of truth
+
+- **Issue #2:** single home for coordination, current session claims, questions, decisions and handoffs. Keep it open throughout development unless the repository owner retires it.
+- **Task issues (#1 Movie Builder, #4 Story Director, #5 Narration Studio, etc.):** acceptance criteria and detailed task-specific evidence.
+- **PRs/branches:** code and reviews; use them instead of changing `main` directly for implementation.
+- **AGENTS.md / AI_HANDOFF.md / ROADMAP.md / ARCHITECTURE.md / DECISIONS.md:** durable project instructions and accepted designs. Update only when substance changes, not for each clock-in.
+- **research/originals/:** preserve immutable historical research.
+
+Tests and current code outrank prose status claims. Never label a synthetic-audio proof as a finished narrated movie, invent tests or promise background execution. **The purpose of the workshop is to let separate sessions coordinate effectively while they build a working filmmaking toolkit.**
