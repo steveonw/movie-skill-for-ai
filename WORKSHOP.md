@@ -1,6 +1,10 @@
-# AI Workshop Protocol
+# AI Workshop — OPTIONAL Coordination, NOT the Project
 
-This repository has a **lightweight collaboration system for AI-assisted development**. It is not a background-agent scheduler: an assistant only works while actively invoked in a session. GitHub provides the persistent record between sessions.
+**Mission:** Build three separate, cooperative filmmaking Skills: **Story Director**, **Narration Studio**, and **Movie Builder**, producing low-cost, well-timed illustrated narration videos. **Read [README.md](README.md) and [AI_HANDOFF.md](AI_HANDOFF.md) before anything about clocking in.**
+
+This file describes a convenient way to share changes across AI sessions. **Clock-in is a GitHub comment, not attendance tracking, an access-control gate, a job queue or a requirement to perform useful work.** A worker without GitHub comment access should still do the user-requested engineering task and hand off results in ordinary text. Nobody should “piss off” or refuse because a clock field wasn't filled out. No AI runs continuously after a chat finishes.
+
+This repository also has a **lightweight collaboration system for AI-assisted development**. It is not a background-agent scheduler: an assistant only works while actively invoked in a session. GitHub provides the persistent record between sessions.
 
 ## Where everything goes
 
