@@ -2,6 +2,10 @@
 
 **Last curated:** 2026-10-14. **Read this entire file at the beginning of any new chat or coding session.**
 
+## CURRENT OWNER CHOICE — SINGLE AI DEVELOPMENT (2026-10-15)
+
+The owner explored a four-AI OpenRouter classroom experiment with selective `TRANSMIT:` messages, an active human coordinator, and separate aides. GitHub lacks that automatic coordinator/relay; Issue #2 is a passive history and discussion thread. The owner now prefers **one AI working on the full project** instead of three or four simultaneous AI sessions. Do not require clock-ins, role assignment, transmissions, or a master AI to make progress. Work sequentially on three **independent Skills**, preserve tested code and PRs, and leave normal GitHub handoffs. Keep the experimental multi-agent protocol in WORKSHOP.md as a future option, not an operating requirement.
+
 ## READ THIS FIRST — MISSION, NOT CLOCK-IN PROCEDURE
 
 The owner wants **a functioning, low-cost filmmaking workflow**, not a project-management simulation. We are building **three independently useful ChatGPT Skills**: Story Director (creative plan), Narration Studio (voice and measured timing), Movie Builder (visual composition and MP4 rendering). They can optionally exchange `script.json`, `plan.json`, `narration.json`, and `timeline.json`.
