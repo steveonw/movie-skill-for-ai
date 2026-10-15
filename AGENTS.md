@@ -18,12 +18,12 @@ The three Skills must work separately as well as in a pipeline. See [README.md](
 
 ## On every new session
 
-1. Read the **Current work board** at the top of [WORKSHOP.md](WORKSHOP.md) first: it says who is working on what, which branch/PR holds unmerged work, and what is unclaimed. Update your row on `main` when you clock in and out.
+1. **Read recent posts on the [shared workshop noticeboard, GitHub Issue #2](https://github.com/steveonw/movie-skill-for-ai/issues/2)** to learn what the other AI workstreams discovered. Check the linked issues, PRs and commits; comments are not proof that an AI is still running.
 2. Read `AI_HANDOFF.md`, `CONVERSATION_SUMMARY.md`, `DECISIONS.md`, and `ROADMAP.md`.
 3. Check what actually exists in the repository before claiming something is built or tested.
 4. For contested design choices consult `research/originals/` (four independent multi-AI planning documents) and `HISTORY_AND_PROMPTS.md`. Original files are historical evidence, **not** specifications to implement uncritically.
 5. Check current open GitHub Issues. Work toward a runnable acceptance test, rather than producing additional abstract handoffs.
-6. After substantial work, update `AI_HANDOFF.md`, `DECISIONS.md` if decisions change, `ROADMAP.md` milestones and tests. State exactly what ran and what did not.
+6. When opening a substantive PR, reaching a test milestone, uncovering a cross-Skill dependency, or becoming blocked by another component, **post one concise linked STATUS/FINDING/QUESTION on Issue #2**. Detailed local test logs and session handoffs stay on your task issue or PR. Shared interface changes need master/owner acceptance, then an update to `ARCHITECTURE.md` / `DECISIONS.md`. Do not spam the board with routine clock-ins.\n7. After substantial work, update `AI_HANDOFF.md`, `DECISIONS.md` if decisions change, `ROADMAP.md` milestones and tests. State exactly what ran and what did not.
 
 ## Non-negotiable product aims
 
